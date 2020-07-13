@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+  
+  <head>
+  	<meta charset="utf-8">
+  </head>
+  <head th:replace="init :: _head"/> 
+  <body>
+    <header th:replace="init :: _header" > </header>
+    
+
+    <div class="container">
+      <div id="login">
+        <h2>Acceso al sistema</h2>
+        <div id="datos" th:if = "${datos_incorrectos}"> 
+        	<p>Los datos que ha ingresado son incorrectos</p>
+        </div>
+         <form method="POST" action="/ingresar">
+           <label for="username">Identificación</label>
+           <input required type="text" id="email_i" name="identificacion" placeholder="Ingrese su identificación" class="form-control my-3">
+        
+           <!-- PASSWORD INPUT -->
+           <label for="password">Password </label>
+           <input type="password" id="pass_i" name="pass" placeholder="Ingrese su contrase&ntilde;a" class="form-control my-3">
+           <input required type="submit" id="btnIngresar" value="Ingresar" class="btn btn-info" style="width: 100%;">
+         <br/><br/>
+           <a href="#">Olvidaste tu contraseña</a><br>
+           <hr>
+         </form>
+       </div>
+    </div>
+  </body>
+</html>

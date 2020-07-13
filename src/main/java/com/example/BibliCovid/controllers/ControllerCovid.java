@@ -1,0 +1,18 @@
+package com.example.BibliCovid.controllers;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class ControllerCovid {
+
+	
+	
+	@RequestMapping("/")
+	public String home(Model model) {
+		String vista="index";
+		return vista;
+	}
+}
+
