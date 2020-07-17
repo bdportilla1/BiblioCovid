@@ -23,7 +23,15 @@ public class RestControllerCovid {
 	
 	// Query obtener los nombres de los articulos y nombre de recursos
 	@GetMapping("/q1")
-	public List<HashMap<String, String>> listarUsuarios() throws InterruptedException, ExecutionException{
+	public List<HashMap<String, String>> q1() throws InterruptedException, ExecutionException{
+		RDFInicializador obj = new RDFInicializador();
+		RepositoryConnection repositoryConnection = obj.getRepositoryConnection();
+		return RDFInicializador.query1(repositoryConnection);
+	}
+	
+	// 
+	@GetMapping("/q2")
+	public List<HashMap<String, String>> q2() throws InterruptedException, ExecutionException{
 		RDFInicializador obj = new RDFInicializador();
 		RepositoryConnection repositoryConnection = obj.getRepositoryConnection();
 		return RDFInicializador.query1(repositoryConnection);

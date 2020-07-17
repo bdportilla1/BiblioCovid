@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+  
+  <head>
+  	<meta charset="utf-8">
+
+  </head>
+  <head th:replace="init :: _head"/> 
+  <script src="js/script_publicaciones.js"></script>
+  <body>
+    <header th:replace="init :: _header" > </header>
+    
+
+    <div class="container">
+    	<div id="gestion_tablas">
+			<h1 style="text-align: center;">Consultas</h1>
+			
+			<div class="row mt-4 mb-4">
+			
+					<div class="col-sm-6">
+						<label for="tipo">Tipo de documento</label>
+						<div class="form-group">
+							<select class="form-control" id="tipo" name="tipo">
+								<option>Article </option>
+							  
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<label for="tipo">Tipo de documento</label>
+						<div class="form-group">
+							<select class="form-control" id="tipo" name="tipo">
+								<option>Article </option>
+							  
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-12">
+					<button type="button" class="btn btn-success" onclick="q_1()">Consultar</button>
+						
+					</div>
+				
+				<hr>
+				<div class="table-responsive">
+					<table class="table my-3">
+						<thead >
+						  <tr>
+							<th scope="col">#</th>
+							<th scope="col">Recurso</th>
+							<th scope="col">Titulo</th>
+						  </tr>
+						</thead>
+							<tbody id="tabla_publicaciones">
+							</tbody>
+						
+					  </table>
+				</div> 
+				
+			</div>
+			
+		</div>
+    </div>
+  </body>
+</html>

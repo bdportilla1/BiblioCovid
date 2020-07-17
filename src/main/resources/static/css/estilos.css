@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: url(../img/fondo2.jpg) no-repeat center top;
+ 
   background-size: cover;
   font-family: sans-serif;
   height: auto;
@@ -44,6 +44,18 @@ body {
 #login label{
   color: #003F72;
   font-size: 18px;
+}
+
+#gestion_tablas{
+	padding: 30px 30px 30px 30px;
+  background-color: white;
+  border-radius: 5%;
+  margin-top: 4%;
+	width: 80%;
+  margin-left: 10%;
+  margin-bottom: 5%;
+  color: #003F72;
+
 }
 
 

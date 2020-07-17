@@ -14,5 +14,12 @@ public class ControllerCovid {
 		String vista="index";
 		return vista;
 	}
+	
+	
+	@RequestMapping("/publicaciones")
+	public String punlicaciones(Model model) {
+		String vista="publicaciones";
+		return vista;
+	}
 }
 
