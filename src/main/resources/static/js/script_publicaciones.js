@@ -1,6 +1,6 @@
 
 const urlbase = 'http://localhost:8080/'
-const q1 = urlbase + 'api/qP';
+const q1 = urlbase + 'api/nodos';
 
 
 $(document).ready(function(){
