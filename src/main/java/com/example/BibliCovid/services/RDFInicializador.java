@@ -29,6 +29,12 @@ public class RDFInicializador {
 	
 	private static String strQuery_Principal;
 	private static String strQuery1;
+	private static String strQuery2;
+	private static String strQuery3;
+	private static String strQuery4;
+	private static String strQuery5;
+	private static String strQuery6;
+	
 	private static String srtQueryNodos;
 	
 
@@ -67,6 +73,17 @@ public class RDFInicializador {
                 + "?Recursos dct:title ?titulo ."
                 + "?Recursos rdf:type fabio:Article . "
                 + "}";
+        
+        // Obtener el tipo de documento y la cantidad en total de cada uno
+        strQuery2
+        		= "PREFIX fabio: <http://purl.org/spar/fabio/>"
+				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+				+ "PREFIX dbo: <http://dbpedia.org/ontology/>"
+				+ "SELECT DISTINCT ?tipo (count(*) AS ?cantidad) WHERE {"
+				+ "?Recursos rdfs:subClassOf fabio:ScholaryWork ."
+				+ "?Recursos rdf:type ?tipo ."
+                + "} GROUP BY ?tipo";
+        
         srtQueryNodos
                 = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>" +
                 "PREFIX fabio: <http://purl.org/spar/fabio/>" +
@@ -128,16 +145,43 @@ public class RDFInicializador {
                 BindingSet bindingSet = result.next();
                 SimpleLiteral titulo = (SimpleLiteral) bindingSet.getValue("titulo");
                 SimpleIRI Recursos = (SimpleIRI) bindingSet.getValue("Recursos");
-                
-              
-                
+                  
                 HashMap<String, String> doc = new HashMap<String, String>();
                 doc.put("recurso", Recursos.stringValue());
                 doc.put("titulo", titulo.stringValue());
                 respuesta.add(doc);
+                 
+            }
+        } catch (QueryEvaluationException qee) {
+            logger.error(WTF_MARKER,
+                    qee.getStackTrace().toString(), qee);
+        } finally {
+            result.close();
+        }
+        return respuesta;
+    }
+	
+	public static List<HashMap<String, String>> query2 (RepositoryConnection repositoryConnection) {
+        TupleQuery tupleQuery = repositoryConnection
+                .prepareTupleQuery(QueryLanguage.SPARQL, strQuery2);
+        TupleQueryResult result = null;
+        
+        List<HashMap<String, String>> respuesta = new ArrayList<>();
+        try {
+            result = tupleQuery.evaluate();
+            while (result.hasNext()) {
+                BindingSet bindingSet = result.next();
+                SimpleLiteral cantidad = (SimpleLiteral) bindingSet.getValue("cantidad");
+                SimpleIRI tipo = (SimpleIRI) bindingSet.getValue("tipo");
+                  
+                HashMap<String, String> doc = new HashMap<String, String>();
                 
-          
                 
+                String[] parts_urltipo = tipo.stringValue().split("/");
+                doc.put("tipo", parts_urltipo[parts_urltipo.length-1]);
+                doc.put("cantidad", cantidad.stringValue());
+                respuesta.add(doc);
+                 
             }
         } catch (QueryEvaluationException qee) {
             logger.error(WTF_MARKER,
@@ -148,6 +192,13 @@ public class RDFInicializador {
         return respuesta;
     }
 
+	
+	
+	
+	
+	
+	
+	
     public static List<HashMap<String, String>> queryNodos (RepositoryConnection repositoryConnection) {
         TupleQuery tupleQuery = repositoryConnection
                 .prepareTupleQuery(QueryLanguage.SPARQL, srtQueryNodos);

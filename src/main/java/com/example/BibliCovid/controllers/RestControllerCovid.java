@@ -36,6 +36,14 @@ public class RestControllerCovid {
 		RepositoryConnection repositoryConnection = obj.getRepositoryConnection();
 		return RDFInicializador.queryPrincipal(repositoryConnection);
 	}
+	
+	@GetMapping("/q2")
+	public List<HashMap<String, String>> q2() throws InterruptedException, ExecutionException{
+		RDFInicializador obj = new RDFInicializador();
+		RepositoryConnection repositoryConnection = obj.getRepositoryConnection();
+		return RDFInicializador.query2(repositoryConnection);
+	}
+	
 
 	@GetMapping("/nodos")
 	public List<HashMap<String, String>> nodos() throws InterruptedException, ExecutionException{

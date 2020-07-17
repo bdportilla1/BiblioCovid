@@ -21,6 +21,12 @@ public class ControllerCovid {
 		String vista="publicaciones";
 		return vista;
 	}
+	
+	@RequestMapping("/graficas")
+	public String graficas(Model model) {
+		String vista="graficas";
+		return vista;
+	}
 
 	@RequestMapping("/WordCloud")
 	public String chartWordCloud(Model model) {

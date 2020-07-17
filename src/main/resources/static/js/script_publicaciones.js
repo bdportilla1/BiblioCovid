@@ -1,14 +1,12 @@
 
 const urlbase = 'http://localhost:8080/'
-const q1 = urlbase + 'api/nodos';
+const q1 = urlbase + 'api/qP';
 
 
 $(document).ready(function(){
 	tabla_publicaciones = document.getElementById("tabla_publicaciones");
 	
 	
-     
-
 });
 
 

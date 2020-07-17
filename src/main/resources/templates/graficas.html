@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="utf-8">
+</head>
+<head th:replace="init :: _head"/>
+<body>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+        margin-bottom: 5%;
+    }
+</style>
+
+
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/plugins/wordCloud.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+<link rel="stylesheet" href="css/LoadingScreen.css">
+
+<header th:replace="init :: _header" > </header>
+
+<!--script maps-->
+<script src="js/script_graficas.js"></script>
+
+ <div class="container">
+ 
+
+ <div class="row mt-4 mb-4">
+ 	
+ 	
+ 	
+	<div class="col-sm-6">
+		<label for="tipo">Elegir item</label>
+		<div class="form-group">
+			<select class="form-control" id="tipo" name="tipo">
+				<option value="http://purl.org/spar/fabio/Article">Scholary Work</option>
+				<option value="http://purl.org/spar/fabio/Review">Authors </option>
+				<option value="http://utpl.edu.ec/COVIDBiblio/ontology/Note">Revistas </option>
+			</select>
+		</div>
+	</div>
+	<div class="col-sm-2">
+  		<button type="button" class="btn btn-success" onclick="dibujar()">Consultar</button>
+  	</div>
+
+
+ 
+
+
+
+<div id="chartdiv"></div>
+
+</div>
+
+<div id="loading-screen" style="display:none">
+    <img src="img/spinning-circles.svg">
+</div>
+</body>
+</html>
