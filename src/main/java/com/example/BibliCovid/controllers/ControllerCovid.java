@@ -27,5 +27,11 @@ public class ControllerCovid {
 		String vista="chartWordCloud";
 		return vista;
 	}
+
+	@RequestMapping("/nodos")
+	public String nodos(Model model) {
+		String vista="chartNodos";
+		return vista;
+	}
 }
 

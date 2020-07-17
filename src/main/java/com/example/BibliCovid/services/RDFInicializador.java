@@ -29,6 +29,7 @@ public class RDFInicializador {
 	
 	private static String strQuery_Principal;
 	private static String strQuery1;
+	private static String srtQueryNodos;
 	
 
 
@@ -66,6 +67,21 @@ public class RDFInicializador {
                 + "?Recursos dct:title ?titulo ."
                 + "?Recursos rdf:type fabio:Article . "
                 + "}";
+        srtQueryNodos
+                = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>" +
+                "PREFIX fabio: <http://purl.org/spar/fabio/>" +
+                "PREFIX dct: <http://purl.org/dc/terms/>" +
+                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+                "PREFIX schema: <https://schema.org/>" +
+                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>" +
+                "select DISTINCT * WHERE {" +
+                "    ?Recursos dct:title ?titulo ;" +
+                "              rdf:type ?tipo ;" +
+                "              dct:language ?language;" +
+                "              dct:creator ?creador." +
+                "    ?creador foaf:name ?nameCreador." +
+                "}";
     }
 	
 	public static List<HashMap<String, String>> queryPrincipal (RepositoryConnection repositoryConnection) {
@@ -99,9 +115,7 @@ public class RDFInicializador {
         return respuesta;
     }
 	
-	
-	
-	
+
 	public static List<HashMap<String, String>> query1 (RepositoryConnection repositoryConnection) {
         TupleQuery tupleQuery = repositoryConnection
                 .prepareTupleQuery(QueryLanguage.SPARQL, strQuery1);
@@ -133,7 +147,49 @@ public class RDFInicializador {
         }
         return respuesta;
     }
-	
-	
+
+    public static List<HashMap<String, String>> queryNodos (RepositoryConnection repositoryConnection) {
+        TupleQuery tupleQuery = repositoryConnection
+                .prepareTupleQuery(QueryLanguage.SPARQL, srtQueryNodos);
+        TupleQueryResult result = null;
+
+        List<HashMap<String, String>> respuesta = new ArrayList<>();
+        try {
+            result = tupleQuery.evaluate();
+            while (result.hasNext()) {
+                BindingSet bindingSet = result.next();
+                SimpleLiteral titulo = (SimpleLiteral) bindingSet.getValue("titulo");
+                SimpleIRI Recursos = (SimpleIRI) bindingSet.getValue("Recursos");
+                SimpleIRI tipo = (SimpleIRI) bindingSet.getValue("tipo");
+                SimpleIRI language = (SimpleIRI) bindingSet.getValue("language");
+                SimpleIRI creador = (SimpleIRI) bindingSet.getValue("creador");
+                SimpleIRI nameCreador = (SimpleIRI) bindingSet.getValue("creador");
+
+
+
+                HashMap<String, String> doc = new HashMap<String, String>();
+                doc.put("recurso", Recursos.stringValue());
+                doc.put("titulo", titulo.stringValue());
+                doc.put("tipo", tipo.stringValue());
+                doc.put("language", language.stringValue());
+                doc.put("creador", creador.stringValue());
+                doc.put("nameCreador", nameCreador.stringValue());
+
+                respuesta.add(doc);
+
+
+
+            }
+        } catch (QueryEvaluationException qee) {
+            logger.error(WTF_MARKER,
+                    qee.getStackTrace().toString(), qee);
+        } finally {
+            result.close();
+        }
+        return respuesta;
+    }
+
+
+
 
 }
