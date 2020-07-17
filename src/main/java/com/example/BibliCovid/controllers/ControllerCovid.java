@@ -39,5 +39,11 @@ public class ControllerCovid {
 		String vista="chartNodos";
 		return vista;
 	}
+
+	@RequestMapping("/public2")
+	public String public2(Model model) {
+		String vista="publicdata";
+		return vista;
+	}
 }
 
