@@ -27,6 +27,7 @@ public class RDFInicializador {
 	private static final String GRAPHDB_SERVER = "http://localhost:7200/";
 	private static final String REPOSITORY_ID = "bcovid";
 	
+	private static String strQuery_Principal;
 	private static String strQuery1;
 	
 
@@ -39,6 +40,19 @@ public class RDFInicializador {
 	}
 	
 	static {
+		
+		// Obtener todos los scholary works
+		strQuery_Principal
+		= "PREFIX onto: <http://www.ontotext.com/>"
+                + "PREFIX fabio: <http://purl.org/spar/fabio/>"
+                + "PREFIX dct: <http://purl.org/dc/terms/>"
+                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+                + "select DISTINCT ?Recursos ?titulo ?tipo WHERE {"
+                + "?Recursos dct:title ?titulo ."
+                + "?Recursos rdf:type ?tipo .  "
+                + "?Recursos rdfs:subClassOf fabio:ScholaryWork ."
+                + "}";
        
        
         // Obtener los recuros y los titulos de los Articulos
@@ -53,6 +67,41 @@ public class RDFInicializador {
                 + "?Recursos rdf:type fabio:Article . "
                 + "}";
     }
+	
+	public static List<HashMap<String, String>> queryPrincipal (RepositoryConnection repositoryConnection) {
+        TupleQuery tupleQuery = repositoryConnection
+                .prepareTupleQuery(QueryLanguage.SPARQL, strQuery_Principal);
+        TupleQueryResult result = null;
+        
+        List<HashMap<String, String>> respuesta = new ArrayList<>();
+        try {
+            result = tupleQuery.evaluate();
+            while (result.hasNext()) {
+                BindingSet bindingSet = result.next();
+                SimpleLiteral titulo = (SimpleLiteral) bindingSet.getValue("titulo");
+                SimpleIRI Recursos = (SimpleIRI) bindingSet.getValue("Recursos");
+                SimpleIRI tipo = (SimpleIRI) bindingSet.getValue("tipo");
+                
+              
+                
+                HashMap<String, String> doc = new HashMap<String, String>();
+                doc.put("recurso", Recursos.stringValue());
+                doc.put("titulo", titulo.stringValue());
+                doc.put("tipo", tipo.stringValue());
+                respuesta.add(doc);
+                 
+            }
+        } catch (QueryEvaluationException qee) {
+            logger.error(WTF_MARKER,
+                    qee.getStackTrace().toString(), qee);
+        } finally {
+            result.close();
+        }
+        return respuesta;
+    }
+	
+	
+	
 	
 	public static List<HashMap<String, String>> query1 (RepositoryConnection repositoryConnection) {
         TupleQuery tupleQuery = repositoryConnection
