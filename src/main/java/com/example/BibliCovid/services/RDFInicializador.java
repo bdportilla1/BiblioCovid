@@ -82,8 +82,7 @@ public class RDFInicializador {
                 SimpleIRI Recursos = (SimpleIRI) bindingSet.getValue("Recursos");
                 SimpleIRI tipo = (SimpleIRI) bindingSet.getValue("tipo");
                 
-              
-                
+
                 HashMap<String, String> doc = new HashMap<String, String>();
                 doc.put("recurso", Recursos.stringValue());
                 doc.put("titulo", titulo.stringValue());
