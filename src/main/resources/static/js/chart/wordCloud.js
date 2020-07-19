@@ -36,9 +36,13 @@ $(document).ready(function(){
 
                 i++;
             });//end each ids
+            const regex = /to|in|an|the|as|la|be|we|et|is|en|by|or|its|at|de|on|ce|from|th|re|of/gi
 
+            var textNew = text2.replace(regex, '')
+            console.log("viejo",text2)
+            console.log("nuevo",textNew)
 
-            textCadena = text2;
+            textCadena = textNew;
             console.log(textCadena)
 
             var chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
@@ -47,7 +51,7 @@ $(document).ready(function(){
             series.accuracy = 4;
             series.step = 15;
             series.rotationThreshold = 0.7;
-            series.maxCount = 200;
+            series.maxCount = 100;
             series.minWordLength = 2;
             series.labels.template.margin(4,4,4,4);
             series.maxFontSize = am4core.percent(30);
