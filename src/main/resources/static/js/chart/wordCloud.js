@@ -36,7 +36,7 @@ $(document).ready(function(){
 
                 i++;
             });//end each ids
-            const regex = /to|in|an|the|as|la|be|we|et|is|en|by|or|its|at|de|on|ce|from|th|re|of/gi
+            const regex = /to|in|an|the|as|la|be|we|et|is|en|by|or|its|at|de|on|ce|from|th|re|of|his|us|our|your|yours|they|them|their|theirs|ours|=|hd|mes|su|nd/gi
 
             var textNew = text2.replace(regex, '')
             console.log("viejo",text2)
