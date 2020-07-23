@@ -115,6 +115,22 @@ public class RDFInicializador {
                 "    ?dataSet dct:description ?description" +
                 "} LIMIT 1000";
         //"} LIMIT 2800000";
+        strQuery4
+                = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
+                "PREFIX dcat: <http://www.w3.org/ns/dcat#>" +
+                "PREFIX data: <http://opendata.org/resource/>" +
+                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>" +
+                "PREFIX dct: <http://purl.org/dc/terms/>" +
+                "PREFIX bido: <http://purl.org/spar/bido/>" +
+                "PREFIX myData: <http://utpl.edu.ec/COVIDBiblio/ontology/>" +
+                "PREFIX dbo: <http://dbpedia.org/ontology/>" +
+                "select DISTINCT ?Recursos ?titulo ?country ?titleQuartile ?ValueQuartile where { " +
+                "    ?Recursos dct:title ?titulo;" +
+                "              dbo:country ?country;" +
+                "              bido:hasQuartile ?Quartile." +
+                "    ?Quartile  dct:title ?titleQuartile;" +
+                "               myData:quartile ?ValueQuartile;" +
+                "} ";
     }
 	
 	public static List<HashMap<String, String>> queryPrincipal (RepositoryConnection repositoryConnection) {
@@ -147,7 +163,6 @@ public class RDFInicializador {
         }
         return respuesta;
     }
-	
 
 	public static List<HashMap<String, String>> query1 (RepositoryConnection repositoryConnection) {
         TupleQuery tupleQuery = repositoryConnection
@@ -208,13 +223,6 @@ public class RDFInicializador {
         return respuesta;
     }
 
-	
-	
-	
-	
-	
-	
-	
     public static List<HashMap<String, String>> queryNodos (RepositoryConnection repositoryConnection) {
         TupleQuery tupleQuery = repositoryConnection
                 .prepareTupleQuery(QueryLanguage.SPARQL, srtQueryNodos);
@@ -245,6 +253,41 @@ public class RDFInicializador {
                 respuesta.add(doc);
 
 
+
+            }
+        } catch (QueryEvaluationException qee) {
+            logger.error(WTF_MARKER,
+                    qee.getStackTrace().toString(), qee);
+        } finally {
+            result.close();
+        }
+        return respuesta;
+    }
+
+    public static List<HashMap<String, String>> query4 (RepositoryConnection repositoryConnection) {
+        TupleQuery tupleQuery = repositoryConnection
+                .prepareTupleQuery(QueryLanguage.SPARQL, strQuery4);
+        TupleQueryResult result = null;
+
+        List<HashMap<String, String>> respuesta = new ArrayList<>();
+        try {
+            result = tupleQuery.evaluate();
+            while (result.hasNext()) {
+                BindingSet bindingSet = result.next();
+                SimpleIRI Recursos = (SimpleIRI) bindingSet.getValue("Recursos");
+                SimpleLiteral titulo = (SimpleLiteral) bindingSet.getValue("titulo");
+                SimpleIRI country = (SimpleIRI) bindingSet.getValue("country");
+                SimpleLiteral titleQuartile = (SimpleLiteral) bindingSet.getValue("titleQuartile");
+                SimpleLiteral ValueQuartile = (SimpleLiteral) bindingSet.getValue("ValueQuartile");
+
+                HashMap<String, String> doc = new HashMap<String, String>();
+                doc.put("recurso", Recursos.stringValue());
+                doc.put("titulo", titulo.stringValue());
+                doc.put("country", country.stringValue());
+                doc.put("titleQuartile", titleQuartile.stringValue());
+                doc.put("ValueQuartile", ValueQuartile.stringValue());
+
+                respuesta.add(doc);
 
             }
         } catch (QueryEvaluationException qee) {
