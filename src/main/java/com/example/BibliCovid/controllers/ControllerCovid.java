@@ -18,7 +18,7 @@ public class ControllerCovid {
 	
 	@RequestMapping("/publicaciones")
 	public String punlicaciones(Model model) {
-		String vista="publicaciones";
+		String vista="publicdata";
 		return vista;
 	}
 	
@@ -37,12 +37,6 @@ public class ControllerCovid {
 	@RequestMapping("/nodos")
 	public String nodos(Model model) {
 		String vista="chartNodos";
-		return vista;
-	}
-
-	@RequestMapping("/public2")
-	public String public2(Model model) {
-		String vista="publicdata";
 		return vista;
 	}
 

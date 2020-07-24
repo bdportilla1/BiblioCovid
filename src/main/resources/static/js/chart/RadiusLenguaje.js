@@ -28,11 +28,14 @@ $(document).ready(function(){
     var screen = $('#loading-screen');
     configureLoadingScreen(screen);
 
+    // para tranformar parametros de una lista
+    var datosT= [];
     var textCadena;
     var text2 = "";
+    var text = "";
+    var chart2 = "";
 
-
-    var urlData = 'http://localhost:8080/api/q3';
+    var urlData = 'http://localhost:8080/api/lenguages';
     var i = 0;
     console.log('cardando URL')
     $.ajax({
@@ -48,40 +51,30 @@ $(document).ready(function(){
             var div = "";
             var div2 = "";
             var codeODS = '';
-
             $.each(data, function (ids, item) {
 
                 console.log("data");
-                text2 = text2 + data[i].language ;
+                text2 = text2 + data[i].lenguaje ;
+                var languaje = "";
+                languaje1 = data[i].lenguaje;
+
+                // para la lista de los datos chart
+                datosT.push({
+                    "country": data[i].lenguaje,
+                    "value": data[i].cantidad
+                });
+
+
+
+
+
 
                 i++;
+
             });//end each ids
-            chart.data = [
-                {
-                    country: "Lithuania",
-                    value: 260
-                },
-                {
-                    country: "Czechia",
-                    value: 230
-                },
-                {
-                    country: "Ireland",
-                    value: 200
-                },
-                {
-                    country: "Germany",
-                    value: 165
-                },
-                {
-                    country: "Australia",
-                    value: 139
-                },
-                {
-                    country: "Austria",
-                    value: 128
-                }
-            ];
+            console.log(datosT)
+
+            chart.data = datosT;
 
             var series = chart.series.push(new am4charts.PieSeries());
             series.dataFields.value = "value";

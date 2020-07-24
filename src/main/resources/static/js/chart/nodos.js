@@ -1,125 +1,110 @@
-		/**
- * ---------------------------------------
- * This demo was created using amCharts 4.
- *
- * For more information visit:
- * https://www.amcharts.com/
- *
- * Documentation is available at:
- * https://www.amcharts.com/docs/v4/
- * ---------------------------------------
+//RadiusLenguaje
+/**
+ * Created by diepinto30 and bdportilla1 on 13/07/2020.
+ * Download data  http://localhost:7200/repositories/sbc-2/statements
  */
 
-// Themes begin
-am4core.useTheme(am4themes_animated);
-// Themes end
 
-var data = [{
-    "country": "no open access",
-    "units": 500,
-    "pie": [{
-        "value": 250,
-        "title": "Cat #1"
-    }, {
-        "value": 150,
-        "title": "Cat #2"
-    }, {
-        "value": 100,
-        "title": "Cat #3"
-    }]
-}, {
-    "country": "open access",
-    "units": 300,
-    "pie": [{
-        "value": 80,
-        "title": "Cat #1"
-    }, {
-        "value": 130,
-        "title": "Cat #2"
-    }, {
-        "value": 90,
-        "title": "Cat #3"
-    }]
-}, {
-    "country": "no definido",
-    "units": 200,
-    "pie": [{
-        "value": 75,
-        "title": "Cat #1"
-    }, {
-        "value": 55,
-        "title": "Cat #2"
-    }, {
-        "value": 70,
-        "title": "Cat #3"
-    }]
-}];
+$(document).ready(function(){
 
+    am4core.useTheme(am4themes_animated);
+    // Themes end
 
-// Create chart instance
-var chart = am4core.create("chartdiv", am4charts.XYChart);
-chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+    var chart = am4core.create("chartdiv", am4plugins_forceDirected.ForceDirectedTree);
+    chart.legend = new am4charts.Legend();
 
-// Add data
-chart.data = data;
+    var networkSeries = chart.series.push(new am4plugins_forceDirected.ForceDirectedSeries())
 
-// Create axes
-var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-categoryAxis.dataFields.category = "country";
-categoryAxis.renderer.grid.template.disabled = true;
+    var screen = $('#loading-screen');
+    configureLoadingScreen(screen);
 
-var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-valueAxis.title.text = "Units sold (M)";
-valueAxis.min = 0;
-valueAxis.renderer.baseGrid.disabled = true;
-valueAxis.renderer.grid.template.strokeOpacity = 0.07;
+    // para tranformar parametros de una lista
+    var datosT= [];
+    var datosT2= [];
+    var textCadena;
+    var text2 = "";
+    var text = "";
+    var chart2 = "";
 
-// Create series
-var series = chart.series.push(new am4charts.ColumnSeries());
-series.dataFields.valueY = "units";
-series.dataFields.categoryX = "country";
-series.tooltip.pointerOrientation = "vertical";
+    var urlData = 'http://localhost:8080/api/scholary_works';
+    var i = 0;
+    console.log('cardando URL')
+    $.ajax({
+        url: urlData,
+        type: 'GET',
+        dataType: 'json',
+        data: {},
+        success: function (data, textStatus, xhr) {
+            console.log('SDG' )
+            console.log(data)
+            var descriptionData = '';
+            var title = '';
+            var div = "";
+            var div2 = "";
+            var codeODS = '';
+            $.each(data, function (ids, item) {
+
+                console.log("data");
+                text2 = text2 + data[i].lenguaje ;
+                var languaje = "";
+                languaje1 = data[i].lenguaje;
+                datosT2.push({
+                    "name": data[i].nameCreador,
+                    "value":1
+                });
+
+                // para la lista de los datos chart
+                datosT.push({
+                    "name": data[i].tipo,
+                    "children":datosT2
+                });
 
 
-var columnTemplate = series.columns.template;
-// add tooltip on column, not template, so that slices could also have tooltip
-columnTemplate.column.tooltipText = "Series: {name}\nCategory: {categoryX}\nValue: {valueY}";
-columnTemplate.column.tooltipY = 0;
-columnTemplate.column.cornerRadiusTopLeft = 20;
-columnTemplate.column.cornerRadiusTopRight = 20;
-columnTemplate.strokeOpacity = 0;
 
 
-// as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
-columnTemplate.adapter.add("fill", function(fill, target) {
-    var color = chart.colors.getIndex(target.dataItem.index * 3);
-    return color;
+
+
+
+                i++;
+
+            });//end each ids
+            console.log(datosT)
+
+            networkSeries.data = datosT;
+
+            networkSeries.dataFields.linkWith = "linkWith";
+            networkSeries.dataFields.name = "name";
+            networkSeries.dataFields.id = "name";
+            networkSeries.dataFields.value = "value";
+            networkSeries.dataFields.children = "children";
+
+            networkSeries.nodes.template.tooltipText = "{name}";
+            networkSeries.nodes.template.fillOpacity = 1;
+
+            networkSeries.nodes.template.label.text = "{name}"
+            networkSeries.fontSize = 8;
+            networkSeries.maxLevels = 2;
+            networkSeries.maxRadius = am4core.percent(6);
+            networkSeries.manyBodyStrength = -16;
+            networkSeries.nodes.template.label.hideOversized = true;
+            networkSeries.nodes.template.label.truncate = true;
+
+
+        },
+        error: function (data) {
+            alert('Error');
+        }
+    });//end ajax
 });
 
-// create pie chart as a column child
-var pieChart = series.columns.template.createChild(am4charts.PieChart);
-pieChart.width = am4core.percent(80);
-pieChart.height = am4core.percent(80);
-pieChart.align = "center";
-pieChart.valign = "middle";
-pieChart.dataFields.data = "pie";
 
-var pieSeries = pieChart.series.push(new am4charts.PieSeries());
-pieSeries.dataFields.value = "value";
-pieSeries.dataFields.category = "title";
-pieSeries.labels.template.disabled = true;
-pieSeries.ticks.template.disabled = true;
-pieSeries.slices.template.stroke = am4core.color("#ffffff");
-pieSeries.slices.template.strokeWidth = 1;
-pieSeries.slices.template.strokeOpacity = 0;
+function configureLoadingScreen(screen){
+    $(document)
+        .ajaxStart(function () {
+            screen.fadeIn();
+        })
+        .ajaxStop(function () {
+            screen.fadeOut();
+        });
+}
 
-pieSeries.slices.template.adapter.add("fill", function(fill, target) {
-    return am4core.color("#ffffff")
-});
-
-pieSeries.slices.template.adapter.add("fillOpacity", function(fillOpacity, target) {
-    return (target.dataItem.index + 1) * 0.2;
-});
-
-pieSeries.hiddenState.properties.startAngle = -90;
-pieSeries.hiddenState.properties.endAngle = 270;

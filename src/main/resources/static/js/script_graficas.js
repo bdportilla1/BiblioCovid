@@ -44,6 +44,9 @@ function dibujar() {
 	}
 
 $(document).ready(function(){
+
+	var screen = $('#loading-screen');
+	configureLoadingScreen(screen);
 	//tabla_publicaciones = document.getElementById("tabla_publicaciones");
 	q_2();
 	//dibujar();
@@ -67,5 +70,15 @@ function q_2(){
     }).catch(err => console.error(err));
 }
 
+
+function configureLoadingScreen(screen){
+	$(document)
+		.ajaxStart(function () {
+			screen.fadeIn();
+		})
+		.ajaxStop(function () {
+			screen.fadeOut();
+		});
+}
 
 
