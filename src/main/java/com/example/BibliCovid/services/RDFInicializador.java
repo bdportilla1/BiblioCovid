@@ -163,9 +163,10 @@ public class RDFInicializador {
                 		"PREFIX dbo: <http://dbpedia.org/ontology/>\r\n" + 
                 		"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
                 		"PREFIX fabio: <http://purl.org/spar/fabio/>\r\n" + 
-                		"	select DISTINCT ?Recurso ?Source ?titulo ?country ?titleQuartile ?ValueRank ?ValueQuartile where { \r\n" + 
+                		"	select DISTINCT ?Recurso ?tituloRecurso ?Source ?titulo ?country ?titleQuartile ?ValueRank ?ValueQuartile where { \r\n" + 
                 		"    ?Recurso rdfs:subClassOf fabio:ScholaryWork;\r\n" + 
-                		"             bido:withBibliometricData ?Source .\r\n" + 
+                		"             dct:title ?tituloRecurso;\r\n" + 
+                		"             bido:withBibliometricData ?Source.\r\n" + 
                 		"    ?Source dct:title ?titulo ;\r\n" + 
                 		"              dbo:country ?country ;\r\n" + 
                 		"               myData:rank ?ValueRank;\r\n" + 
@@ -492,6 +493,7 @@ public class RDFInicializador {
             while (result.hasNext()) {
                 BindingSet bindingSet = result.next();
                 SimpleIRI Recursos = (SimpleIRI) bindingSet.getValue("Recurso");
+                SimpleLiteral tituloRecurso = (SimpleLiteral) bindingSet.getValue("tituloRecurso");
                 SimpleLiteral titulo = (SimpleLiteral) bindingSet.getValue("titulo");
                 SimpleIRI country = (SimpleIRI) bindingSet.getValue("country");
                 SimpleLiteral titleQuartile = (SimpleLiteral) bindingSet.getValue("titleQuartile");
@@ -500,6 +502,7 @@ public class RDFInicializador {
 
                 HashMap<String, String> doc = new HashMap<String, String>();
                 doc.put("recurso", Recursos.stringValue());
+                doc.put("tituloRecurso", tituloRecurso.stringValue());
                 doc.put("titulo", titulo.stringValue());
                 doc.put("country", country.stringValue());
                 doc.put("titleQuartile", titleQuartile.stringValue());
