@@ -77,9 +77,6 @@ $(document).ready(function(){
 });
 
 
-
-
-
 function configureLoadingScreen(screen){
     $(document)
         .ajaxStart(function () {

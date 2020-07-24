@@ -45,5 +45,11 @@ public class ControllerCovid {
 		String vista="publicdata";
 		return vista;
 	}
+
+	@RequestMapping("/RadiusLenguaje")
+	public String RadiusLenguaje(Model model) {
+		String vista="chartRadiusLenguaje";
+		return vista;
+	}
 }
 
