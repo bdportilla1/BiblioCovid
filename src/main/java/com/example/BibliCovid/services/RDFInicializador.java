@@ -113,13 +113,17 @@ public class RDFInicializador {
                 "PREFIX bido: <http://purl.org/spar/bido/>" +
                 "PREFIX myData: <http://utpl.edu.ec/COVIDBiblio/ontology/>" +
                 "PREFIX dbo: <http://dbpedia.org/ontology/>" +
-                "select DISTINCT ?Recursos ?titulo ?country ?titleQuartile ?ValueQuartile where { " +
-                "    ?Recursos dct:title ?titulo;" +
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+                "PREFIX fabio: <http://purl.org/spar/fabio/>" +
+                "select DISTINCT ?Recurso ?Source ?titulo ?country ?titleQuartile ?ValueQuartile where { " +
+                "    ?Recurso rdfs:subClassOf fabio:ScholaryWork;" +
+                "             bido:withBibliometricData ?Source." +
+                "    ?Source dct:title ?titulo;" +
                 "              dbo:country ?country;" +
                 "              bido:hasQuartile ?Quartile." +
                 "    ?Quartile  dct:title ?titleQuartile;" +
                 "               myData:quartile ?ValueQuartile;" +
-                "} ";
+                " }";
     }
 	
 	public static List<HashMap<String, String>> queryPrincipal (RepositoryConnection repositoryConnection) {
