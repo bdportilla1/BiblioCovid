@@ -11,7 +11,7 @@ $(document).ready(function(){
     var text2 = "";
 
 
-    var urlData = 'http://localhost:8080/api/nodos';
+    var urlData = 'http://localhost:8080/api/q3';
     var i = 0;
     var i2 = 0;
     console.log('cardando URL')

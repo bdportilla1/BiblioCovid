@@ -267,7 +267,7 @@ public class RDFInicializador {
             result = tupleQuery.evaluate();
             while (result.hasNext()) {
                 BindingSet bindingSet = result.next();
-                SimpleIRI Recursos = (SimpleIRI) bindingSet.getValue("Recursos");
+                SimpleIRI Recursos = (SimpleIRI) bindingSet.getValue("Recurso");
                 SimpleLiteral titulo = (SimpleLiteral) bindingSet.getValue("titulo");
                 SimpleIRI country = (SimpleIRI) bindingSet.getValue("country");
                 SimpleLiteral titleQuartile = (SimpleLiteral) bindingSet.getValue("titleQuartile");
