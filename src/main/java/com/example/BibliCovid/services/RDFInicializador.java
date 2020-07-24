@@ -83,8 +83,9 @@ public class RDFInicializador {
 				+ "?Recursos rdfs:subClassOf fabio:ScholaryWork ."
 				+ "?Recursos rdf:type ?tipo ."
                 + "} GROUP BY ?tipo";
-        
-        srtQueryNodos
+
+        // Obtener todos los recursos con su titulo y el creador
+        strQuery3
                 = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>" +
                 "PREFIX fabio: <http://purl.org/spar/fabio/>" +
                 "PREFIX dct: <http://purl.org/dc/terms/>" +
@@ -99,22 +100,10 @@ public class RDFInicializador {
                 "              dct:creator ?creador." +
                 "    ?creador foaf:name ?nameCreador." +
                 "}";
-        strQuery3
-                = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
-                "PREFIX dcat: <http://www.w3.org/ns/dcat#>" +
-                "PREFIX data: <http://opendata.org/resource/>" +
-                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>" +
-                "PREFIX dct: <http://purl.org/dc/terms/>" +
-                "select DISTINCT * where { " +
-                "    ?dataSet dcat:dataset ?valor." +
-                "    ?categori rdf:type dcat:Catalog ." +
-                "    ?dataSet foaf:homepage ?homepage." +
-                "    ?dataSet dct:publisher ?publisher." +
-                "    ?dataSet dct:title ?title." +
-                "    ?dataSet dct:identifier ?identifier." +
-                "    ?dataSet dct:description ?description" +
-                "} LIMIT 1000";
-        //"} LIMIT 2800000";
+
+
+
+        // obtener todos los recursos que tengan un quartile y el pais
         strQuery4
                 = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
                 "PREFIX dcat: <http://www.w3.org/ns/dcat#>" +
@@ -223,9 +212,9 @@ public class RDFInicializador {
         return respuesta;
     }
 
-    public static List<HashMap<String, String>> queryNodos (RepositoryConnection repositoryConnection) {
+    public static List<HashMap<String, String>> query3 (RepositoryConnection repositoryConnection) {
         TupleQuery tupleQuery = repositoryConnection
-                .prepareTupleQuery(QueryLanguage.SPARQL, srtQueryNodos);
+                .prepareTupleQuery(QueryLanguage.SPARQL, strQuery3);
         TupleQueryResult result = null;
 
         List<HashMap<String, String>> respuesta = new ArrayList<>();

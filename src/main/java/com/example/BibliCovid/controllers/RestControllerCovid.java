@@ -45,11 +45,11 @@ public class RestControllerCovid {
 	}
 	
 
-	@GetMapping("/nodos")
-	public List<HashMap<String, String>> nodos() throws InterruptedException, ExecutionException{
+	@GetMapping("/q3")
+	public List<HashMap<String, String>> q3() throws InterruptedException, ExecutionException{
 		RDFInicializador obj = new RDFInicializador();
 		RepositoryConnection repositoryConnection = obj.getRepositoryConnection();
-		return RDFInicializador.queryNodos(repositoryConnection);
+		return RDFInicializador.query3(repositoryConnection);
 	}
 
 	@GetMapping("/ranks")
