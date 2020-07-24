@@ -30,6 +30,8 @@ public class RDFInicializador {
 	
 	private static String query_scholary_works;
 	
+	private static String query_lenguajes;
+	
 	
 	
 	private static String strQuery_Principal;
@@ -52,6 +54,16 @@ public class RDFInicializador {
 	}
 	
 	static {
+		
+		// lenguajes y cantidad
+		query_lenguajes
+		="PREFIX fabio: <http://purl.org/spar/fabio/>\r\n" + 
+				"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
+				"PREFIX dct: <http://purl.org/dc/terms/>\r\n" + 
+				"SELECT DISTINCT ?lenguaje (count(*) AS ?cantidad) WHERE {\r\n" + 
+				"    ?Recursos rdfs:subClassOf fabio:ScholaryWork;\r\n" + 
+				"              dct:language ?lenguaje.\r\n" + 
+				"} GROUP BY ?lenguaje";
 		
 		
 		// Obtener scholary work = tipo. anio, lenguaje, numcitas
@@ -148,6 +160,39 @@ public class RDFInicializador {
                 " }";
     }
 	
+	
+	public static List<HashMap<String, String>> queryLenguajes (RepositoryConnection repositoryConnection) {
+        TupleQuery tupleQuery = repositoryConnection
+                .prepareTupleQuery(QueryLanguage.SPARQL, query_lenguajes);
+        TupleQueryResult result = null;
+        
+        List<HashMap<String, String>> respuesta = new ArrayList<>();
+        try {
+            result = tupleQuery.evaluate();
+            while (result.hasNext()) {
+                BindingSet bindingSet = result.next();
+
+                SimpleIRI lenguaje = (SimpleIRI) bindingSet.getValue("lenguaje");
+                SimpleLiteral cantidad = (SimpleLiteral) bindingSet.getValue("cantidad");
+                
+                HashMap<String, String> doc = new HashMap<String, String>();
+                
+                String[] parts_lenguage = lenguaje.stringValue().split("/");
+                doc.put("lenguaje", parts_lenguage[parts_lenguage.length-1]);
+                
+                doc.put("cantidad", cantidad.stringValue());
+                
+                respuesta.add(doc);
+                 
+            }
+        } catch (QueryEvaluationException qee) {
+            logger.error(WTF_MARKER,
+                    qee.getStackTrace().toString(), qee);
+        } finally {
+            result.close();
+        }
+        return respuesta;
+    }
 	
 	
 	public static List<HashMap<String, String>> queryRecursos (RepositoryConnection repositoryConnection) {

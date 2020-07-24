@@ -20,9 +20,18 @@ import com.example.BibliCovid.services.RDFInicializador;
 public class RestControllerCovid {
 	
 	
+	// Query obtener lenguajes y cantidad de articulos
+			@GetMapping("/lenguages")
+			public List<HashMap<String, String>> lenguages() throws InterruptedException, ExecutionException{
+				RDFInicializador obj = new RDFInicializador();
+				RepositoryConnection repositoryConnection = obj.getRepositoryConnection();
+				return RDFInicializador.queryLenguajes(repositoryConnection);
+			}
+	
+	
 	// Query obtener los scholary work: anio, tipo, lenguage, numcitas
 		@GetMapping("/scholary_works")
-		public List<HashMap<String, String>> scholary_wors() throws InterruptedException, ExecutionException{
+		public List<HashMap<String, String>> scholary_works() throws InterruptedException, ExecutionException{
 			RDFInicializador obj = new RDFInicializador();
 			RepositoryConnection repositoryConnection = obj.getRepositoryConnection();
 			return RDFInicializador.queryRecursos(repositoryConnection);
