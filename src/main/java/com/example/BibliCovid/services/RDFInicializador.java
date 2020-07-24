@@ -163,14 +163,15 @@ public class RDFInicializador {
                 		"PREFIX dbo: <http://dbpedia.org/ontology/>\r\n" + 
                 		"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
                 		"PREFIX fabio: <http://purl.org/spar/fabio/>\r\n" + 
-                		"	select DISTINCT ?Recurso ?Source ?titulo ?country ?titleQuartile ?ValueQuartile where { \r\n" + 
+                		"	select DISTINCT ?Recurso ?Source ?titulo ?country ?titleQuartile ?ValueRank ?ValueQuartile where { \r\n" + 
                 		"    ?Recurso rdfs:subClassOf fabio:ScholaryWork;\r\n" + 
                 		"             bido:withBibliometricData ?Source .\r\n" + 
                 		"    ?Source dct:title ?titulo ;\r\n" + 
                 		"              dbo:country ?country ;\r\n" + 
+                		"               myData:rank ?ValueRank;\r\n" + 
                 		"              bido:hasQuartile ?Quartile .\r\n" + 
                 		"    ?Quartile  dct:title ?titleQuartile ;\r\n" + 
-                		"               myData:quartile ?ValueQuartile .\r\n" + 
+                		"               myData:quartile ?ValueQuartile.\r\n" + 
                 		"}";
     }
 	
@@ -206,6 +207,8 @@ public class RDFInicializador {
                 doc.put("recurso", parts_recurso[parts_recurso.length-1]);
                 doc.put("autor", autor.stringValue());
                 doc.put("titulo", titulo.stringValue());
+                
+                System.out.println(doc);
                 respuesta.add(doc);
                 
             }
@@ -215,11 +218,18 @@ public class RDFInicializador {
             
             
             HashMap<String, List<String>> docList = new HashMap<>();
-          
             
+            List<List<String>> lsArrayNombres= new ArrayList<>();
+          
+            int cont = 0;
+            
+            System.out.println(respuesta);
             for(int i=0; i<respuesta.size(); i++) {
             	if(actual_id.equals(respuesta.get(i).get("recurso"))) {
             		autoresArray.add(respuesta.get(i).get("autor"));
+            		
+            	
+            		
             		//autores.add(respuesta.get(i).get("autor"));
             		
             	}else {
@@ -227,10 +237,16 @@ public class RDFInicializador {
             		docList.put("autores", autoresArray);
             		autoresHash.add(docList);
             		
-            		actual_id = respuesta.get(i).get("recurso");
+            		
+            	
+            		
             		docList.clear();
             		autoresArray.clear();
+            		
+            		actual_id = respuesta.get(i).get("recurso");
+            		autoresArray.add(respuesta.get(i).get("autor"));
             	
+            		
             	}
             	if(i== (respuesta.size()-1)) {
             		
