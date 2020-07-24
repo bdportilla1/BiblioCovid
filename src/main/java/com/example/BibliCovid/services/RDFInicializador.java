@@ -228,6 +228,7 @@ public class RDFInicializador {
             		autoresHash.add(docList);
             		
             		actual_id = respuesta.get(i).get("recurso");
+            		docList.clear();
             		autoresArray.clear();
             	
             	}
