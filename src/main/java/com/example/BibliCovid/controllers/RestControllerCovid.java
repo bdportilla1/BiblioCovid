@@ -19,6 +19,15 @@ import com.example.BibliCovid.services.RDFInicializador;
 @RequestMapping("/api")
 public class RestControllerCovid {
 	
+	// Query obtener recursos con sus autores
+				@GetMapping("/autores")
+				//public List<HashMap<String, String>> autores() throws InterruptedException, ExecutionException{
+				public List<HashMap<String, List<String>>> autores() throws InterruptedException, ExecutionException{
+					RDFInicializador obj = new RDFInicializador();
+					RepositoryConnection repositoryConnection = obj.getRepositoryConnection();
+					return RDFInicializador.queryAutores(repositoryConnection);
+				}
+	
 	
 	// Query obtener lenguajes y cantidad de articulos
 			@GetMapping("/lenguages")

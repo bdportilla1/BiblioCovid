@@ -32,6 +32,8 @@ public class RDFInicializador {
 	
 	private static String query_lenguajes;
 	
+	private static String query_autores;
+	
 	
 	
 	private static String strQuery_Principal;
@@ -54,6 +56,18 @@ public class RDFInicializador {
 	}
 	
 	static {
+		
+		query_autores
+		= "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\r\n" + 
+				"PREFIX fabio: <http://purl.org/spar/fabio/>\r\n" + 
+				"PREFIX dct: <http://purl.org/dc/terms/>\r\n" + 
+				"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
+				"select DISTINCT ?recurso ?titulo ?autor WHERE {\r\n" + 
+				"    ?recurso rdfs:subClassOf fabio:ScholaryWork ;\r\n" + 
+				"             dct:title ?titulo;\r\n" + 
+				"             dct:creator ?creador.\r\n" + 
+				"    ?creador foaf:name ?autor.\r\n" + 
+				"                }";
 		
 		// lenguajes y cantidad
 		query_lenguajes
@@ -139,25 +153,101 @@ public class RDFInicializador {
 
         // obtener todos los recursos que tengan un quartile y el pais
         strQuery4
-                = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
-                "PREFIX dcat: <http://www.w3.org/ns/dcat#>" +
-                "PREFIX data: <http://opendata.org/resource/>" +
-                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>" +
-                "PREFIX dct: <http://purl.org/dc/terms/>" +
-                "PREFIX bido: <http://purl.org/spar/bido/>" +
-                "PREFIX myData: <http://utpl.edu.ec/COVIDBiblio/ontology/>" +
-                "PREFIX dbo: <http://dbpedia.org/ontology/>" +
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-                "PREFIX fabio: <http://purl.org/spar/fabio/>" +
-                "select DISTINCT ?Recurso ?Source ?titulo ?country ?titleQuartile ?ValueQuartile where { " +
-                "    ?Recurso rdfs:subClassOf fabio:ScholaryWork;" +
-                "             bido:withBibliometricData ?Source." +
-                "    ?Source dct:title ?titulo;" +
-                "              dbo:country ?country;" +
-                "              bido:hasQuartile ?Quartile." +
-                "    ?Quartile  dct:title ?titleQuartile;" +
-                "               myData:quartile ?ValueQuartile;" +
-                " }";
+                = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
+                		"PREFIX dcat: <http://www.w3.org/ns/dcat#>\r\n" + 
+                		"PREFIX data: <http://opendata.org/resource/>\r\n" + 
+                		"PREFIX foaf: <http://xmlns.com/foaf/0.1/>\r\n" + 
+                		"PREFIX dct: <http://purl.org/dc/terms/>\r\n" + 
+                		"PREFIX bido: <http://purl.org/spar/bido/>\r\n" + 
+                		"PREFIX myData: <http://utpl.edu.ec/COVIDBiblio/ontology/>\r\n" + 
+                		"PREFIX dbo: <http://dbpedia.org/ontology/>\r\n" + 
+                		"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
+                		"PREFIX fabio: <http://purl.org/spar/fabio/>\r\n" + 
+                		"	select DISTINCT ?Recurso ?Source ?titulo ?country ?titleQuartile ?ValueQuartile where { \r\n" + 
+                		"    ?Recurso rdfs:subClassOf fabio:ScholaryWork;\r\n" + 
+                		"             bido:withBibliometricData ?Source .\r\n" + 
+                		"    ?Source dct:title ?titulo ;\r\n" + 
+                		"              dbo:country ?country ;\r\n" + 
+                		"              bido:hasQuartile ?Quartile .\r\n" + 
+                		"    ?Quartile  dct:title ?titleQuartile ;\r\n" + 
+                		"               myData:quartile ?ValueQuartile .\r\n" + 
+                		"}";
+    }
+	
+	
+	public static List<HashMap<String, List<String>>> queryAutores (RepositoryConnection repositoryConnection) {
+	//public static List<HashMap<String, String>> queryAutores (RepositoryConnection repositoryConnection) {
+        TupleQuery tupleQuery = repositoryConnection
+                .prepareTupleQuery(QueryLanguage.SPARQL, query_autores);
+        TupleQueryResult result = null;
+        
+        List<HashMap<String, String>> respuesta = new ArrayList<>();
+        List<HashMap<String, String>> autores = new ArrayList<>();
+        
+        List<String> autoresArray = new ArrayList<>();
+        
+        
+        List<HashMap<String, List<String>>> autoresHash = new ArrayList<>();
+        
+        try {
+            result = tupleQuery.evaluate();
+            while (result.hasNext()) {
+                BindingSet bindingSet = result.next();
+
+                SimpleIRI recurso = (SimpleIRI) bindingSet.getValue("recurso");
+                SimpleLiteral titulo = (SimpleLiteral) bindingSet.getValue("titulo");
+                SimpleLiteral autor = (SimpleLiteral) bindingSet.getValue("autor");
+                
+                
+                
+                HashMap<String, String> doc = new HashMap<String, String>();
+                
+                String[] parts_recurso = recurso.stringValue().split("/");
+                doc.put("recurso", parts_recurso[parts_recurso.length-1]);
+                doc.put("autor", autor.stringValue());
+                doc.put("titulo", titulo.stringValue());
+                respuesta.add(doc);
+                
+            }
+            String actual_id = respuesta.get(0).get("recurso");
+            
+            HashMap<String, String> autor_Doc = new HashMap<String, String>();
+            
+            
+            HashMap<String, List<String>> docList = new HashMap<>();
+          
+            
+            for(int i=0; i<respuesta.size(); i++) {
+            	if(actual_id.equals(respuesta.get(i).get("recurso"))) {
+            		autoresArray.add(respuesta.get(i).get("autor"));
+            		//autores.add(respuesta.get(i).get("autor"));
+            		
+            	}else {
+            		
+            		docList.put("autores", autoresArray);
+            		autoresHash.add(docList);
+            		
+            		actual_id = respuesta.get(i).get("recurso");
+            		autoresArray.clear();
+            	
+            	}
+            	if(i== (respuesta.size()-1)) {
+            		
+            		docList.put("autores", autoresArray);
+            		autoresHash.add(docList);
+            	}
+            	
+            	
+            }
+            
+            
+        } catch (QueryEvaluationException qee) {
+            logger.error(WTF_MARKER,
+                    qee.getStackTrace().toString(), qee);
+        } finally {
+            result.close();
+        }
+        return autoresHash;
     }
 	
 	
@@ -388,6 +478,7 @@ public class RDFInicializador {
                 SimpleLiteral titulo = (SimpleLiteral) bindingSet.getValue("titulo");
                 SimpleIRI country = (SimpleIRI) bindingSet.getValue("country");
                 SimpleLiteral titleQuartile = (SimpleLiteral) bindingSet.getValue("titleQuartile");
+                SimpleLiteral ValueRank = (SimpleLiteral) bindingSet.getValue("ValueRank");
                 SimpleLiteral ValueQuartile = (SimpleLiteral) bindingSet.getValue("ValueQuartile");
 
                 HashMap<String, String> doc = new HashMap<String, String>();
@@ -395,6 +486,7 @@ public class RDFInicializador {
                 doc.put("titulo", titulo.stringValue());
                 doc.put("country", country.stringValue());
                 doc.put("titleQuartile", titleQuartile.stringValue());
+                doc.put("ValueRank", ValueRank.stringValue());
                 doc.put("ValueQuartile", ValueQuartile.stringValue());
 
                 respuesta.add(doc);
