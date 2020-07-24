@@ -26,6 +26,11 @@ public class RDFInicializador {
 // GraphDB 
 	private static final String GRAPHDB_SERVER = "http://localhost:7200/";
 	private static final String REPOSITORY_ID = "bcovid";
+
+	
+	private static String query_scholary_works;
+	
+	
 	
 	private static String strQuery_Principal;
 	private static String strQuery1;
@@ -47,6 +52,23 @@ public class RDFInicializador {
 	}
 	
 	static {
+		
+		
+		// Obtener scholary work = tipo. anio, lenguaje, numcitas
+		query_scholary_works
+		="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
+				"PREFIX dct: <http://purl.org/dc/terms/>\r\n" + 
+				"PREFIX myData: <http://utpl.edu.ec/COVIDBiblio/ontology/>\r\n" + 
+				"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
+				"PREFIX fabio: <http://purl.org/spar/fabio/>\r\n" + 
+				"select DISTINCT ?recurso ?titulo ?date ?lenguaje ?tipo ?numCitas where {\r\n" + 
+				"    ?recurso rdfs:subClassOf fabio:ScholaryWork;\r\n" + 
+				"        dct:title ?titulo;\r\n" + 
+				"        dct:date ?date;\r\n" + 
+				"    	dct:language ?lenguaje;\r\n" + 
+				"        rdf:type ?tipo;\r\n" + 
+				"    	myData:citationsCount ?numCitas\r\n" + 
+				"} ";
 		
 		// Obtener todos los scholary works
 		strQuery_Principal
@@ -124,6 +146,56 @@ public class RDFInicializador {
                 "    ?Quartile  dct:title ?titleQuartile;" +
                 "               myData:quartile ?ValueQuartile;" +
                 " }";
+    }
+	
+	
+	
+	public static List<HashMap<String, String>> queryRecursos (RepositoryConnection repositoryConnection) {
+        TupleQuery tupleQuery = repositoryConnection
+                .prepareTupleQuery(QueryLanguage.SPARQL, query_scholary_works);
+        TupleQueryResult result = null;
+        
+        List<HashMap<String, String>> respuesta = new ArrayList<>();
+        try {
+            result = tupleQuery.evaluate();
+            while (result.hasNext()) {
+                BindingSet bindingSet = result.next();
+                
+                SimpleIRI recurso = (SimpleIRI) bindingSet.getValue("recurso");
+                SimpleLiteral titulo = (SimpleLiteral) bindingSet.getValue("titulo");
+                SimpleLiteral date = (SimpleLiteral) bindingSet.getValue("date");
+                SimpleIRI lenguaje = (SimpleIRI) bindingSet.getValue("lenguaje");
+                SimpleIRI tipo = (SimpleIRI) bindingSet.getValue("tipo");
+                SimpleLiteral numCitas = (SimpleLiteral) bindingSet.getValue("numCitas");
+                
+
+                HashMap<String, String> doc = new HashMap<String, String>();
+                
+                String[] parts_recurso = recurso.stringValue().split("/");
+                doc.put("recurso", parts_recurso[parts_recurso.length-1]);
+                
+                doc.put("titulo", titulo.stringValue());
+                
+                doc.put("date", date.stringValue());
+                
+                String[] parts_lenguage = lenguaje.stringValue().split("/");
+                doc.put("lenguaje", parts_lenguage[parts_lenguage.length-1]);
+                
+                String[] parts_tipo = tipo.stringValue().split("/");
+                doc.put("tipo", parts_tipo[parts_tipo.length-1]);
+                
+                doc.put("numCitas", numCitas.stringValue());
+                
+                respuesta.add(doc);
+                 
+            }
+        } catch (QueryEvaluationException qee) {
+            logger.error(WTF_MARKER,
+                    qee.getStackTrace().toString(), qee);
+        } finally {
+            result.close();
+        }
+        return respuesta;
     }
 	
 	public static List<HashMap<String, String>> queryPrincipal (RepositoryConnection repositoryConnection) {

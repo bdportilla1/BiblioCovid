@@ -20,6 +20,14 @@ import com.example.BibliCovid.services.RDFInicializador;
 public class RestControllerCovid {
 	
 	
+	// Query obtener los scholary work: anio, tipo, lenguage, numcitas
+		@GetMapping("/scholary_works")
+		public List<HashMap<String, String>> scholary_wors() throws InterruptedException, ExecutionException{
+			RDFInicializador obj = new RDFInicializador();
+			RepositoryConnection repositoryConnection = obj.getRepositoryConnection();
+			return RDFInicializador.queryRecursos(repositoryConnection);
+		}
+	
 	
 	// Query obtener los nombres de los articulos y nombre de recursos
 	@GetMapping("/q1")
