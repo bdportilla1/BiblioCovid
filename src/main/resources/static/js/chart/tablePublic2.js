@@ -134,7 +134,7 @@ $(document).ready(function(){
                 tab += '<th>' + data[i].recurso + '</th>';
                 tab += '<th>' + data[i].tipo + '</th>';
                 tab += '<th>' + data[i].lenguaje + '</th>';
-                tab += '<th ><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter'+i2+'" onclick="FunctionMore('+i2+',\''+idrecursoTxt+' \' )">Ver más </button> </th>';
+                tab += '<th ><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter'+i2+'" onclick="FunctionMore('+i2+',\''+idrecursoTxt+'\')">Ver más </button> </th>';
                 console.log("Todos los datos");
 
                 //consulta para ver los valores en del rank y quartil de los recursos
@@ -208,6 +208,7 @@ function FunctionMore(numero, string) {
         var j2 = 0;
         var tituloID = "";
         tituloID = string
+        console.log(tituloID)
         var modalMore = "";
         console.log('cardando URL ranks')
         $.ajax({
@@ -223,16 +224,20 @@ function FunctionMore(numero, string) {
                     console.log("Ranks data");
                     var titleRank = data[j].idRecursos;
                     var ranksValue  = data[j].ValueRank;
-                    console.log("titulo igual"+ data[j].ValueRank)
-                    if (tituloID == titleRank  ){
+                    console.log("titulo igual: "+ data[j].ValueRank)
+                    console.log(titleRank)
+                    if (tituloID == titleRank){
                         console.log("titulo igual: "+ data[j].ValueRank);
                         modalMore +='<p>'+data[j].ValueRank+'</p>';
-                        var modalAppend = "#modal"+titleRank;
+                        var modalAppend = "#"+data[j].idRecursos;
+                        console.log(modalAppend);
                         $(modalAppend).append(modalMore);
 
+                    }else{
+                        console.log("No igual");
                     }
                     //var modalAppend = "#modal"+j2;
-                    console.log(modalAppend);
+
                     //$("#modal"+j2).append(modalMore);
                     //console.log(data[i].tituloRecurso);
 
