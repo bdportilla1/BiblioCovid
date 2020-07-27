@@ -226,15 +226,17 @@ function FunctionMore(numero, string) {
                     var ranksValue  = data[j].ValueRank;
                     console.log("titulo igual: "+ data[j].ValueRank)
                     console.log(titleRank)
+
                     if (tituloID == titleRank){
+
+
+                    }else{
+                        console.log("No igual");
                         console.log("titulo igual: "+ data[j].ValueRank);
                         modalMore +='<p>'+data[j].ValueRank+'</p>';
                         var modalAppend = "#"+data[j].idRecursos;
                         console.log(modalAppend);
-                        $(modalAppend).append(modalMore);
-
-                    }else{
-                        console.log("No igual");
+                        $('#'+data[j].idRecursos).append(modalMore);
                     }
                     //var modalAppend = "#modal"+j2;
 
