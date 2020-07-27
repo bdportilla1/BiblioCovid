@@ -12,8 +12,13 @@ $(document).ready(function(){
 
 
     var urlData = 'http://localhost:8080/api/scholary_works';
+
     var i = 0;
     var i2 = 0;
+    var recursoTitle;
+    var titleRecursoG;
+    var j2 = 0;
+
     console.log('cardando URL')
     var i = 0;
     $.ajax({
@@ -119,55 +124,29 @@ $(document).ready(function(){
 
             $.each(data, function (ids, item) {
                 i2 = i2 +1;
+                recursoTitle = data[i].recurso;
+                var idTitle = data[i].recurso;
+                titleRecursoG = data[i].titulo;
+                var idrecursoTxt = "";
+                idrecursoTxt = data[i].recurso;
                 tab += '<tr>';
-                tab += "<td>" + i2 + "</td>";
-                tab += "<th>" + data[i].recurso + "</th>";
-                tab += "<th>" + data[i].tipo + "</th>";
-                tab += "<th>" + data[i].lenguaje + "</th>";
-                tab += "<th ><button type='button' class='btn btn-primary' data-toggle='modal' data-target='#exampleModalCenter"+i2+"'>Ver más </button> </th>";
+                tab += '<td>' + i2 + '</td>';
+                tab += '<th>' + data[i].recurso + '</th>';
+                tab += '<th>' + data[i].tipo + '</th>';
+                tab += '<th>' + data[i].lenguaje + '</th>';
+                tab += '<th ><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter'+i2+'" onclick="FunctionMore('+i2+',\''+idrecursoTxt+' \' )">Ver más </button> </th>';
                 console.log("Todos los datos");
 
                 //consulta para ver los valores en del rank y quartil de los recursos
-                var urlDataRanks = 'http://localhost:8080/api/ranks';
-                var j = 0;
-                var titulo;
-                console.log('cardando URL ranks')
-                $.ajax({
-                    url: urlDataRanks,
-                    type: 'GET',
-                    dataType: 'json',
-                    data: {},
-                    success: function (data, textStatus, xhr) {
-                        console.log('Ranks' )
-                        console.log(data)
-
-                        $.each(data, function (ids, item) {
-
-                            console.log("Ranks data");
-                            //console.log(data[i].ValueRank) ;
-                            //console.log(data[i].tituloRecurso);
-
-
-                            j++;
-
-
-                        });//end each ids
 
 
 
-                    },
-                    error: function (data) {
-                        alert('Error');
-                    }
-                });//end ajax
-
-                i++;
                 modal += '<!-- Modal -->\n' +
                     '<div class="modal fade" id="exampleModalCenter'+i2+'" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">\n' +
                     '  <div class="modal-dialog modal-dialog-centered" role="document">\n' +
                     '    <div class="modal-content">\n' +
                     '      <div class="modal-header">\n' +
-                    '        <h5 class="modal-title" id="exampleModalLongTitle"><strong><i>Id Recurso: </i></strong>'+data[i].recurso+'</h5>\n' +
+                    '        <h5 class="modal-title" id="exampleModalLongTitle"><strong><i>Id Recurso: </i></strong>'+idTitle+'</h5>\n' +
                     '        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
                     '          <span aria-hidden="true">&times;</span>\n' +
                     '        </button>\n' +
@@ -182,10 +161,15 @@ $(document).ready(function(){
                 }else{
                     modal +='      No tiene citas aún ' ;
                 }
-                modal +='      </div>\n' +
+                modal +='        <hr>' +
+                    '           <div id="modal'+idTitle+'">' +
+                    '           </div>' +
+                    '      </div>\n' +
                     '    </div>\n' +
                     '  </div>\n' +
                     '</div>';
+                i++;
+
 
             });//end each ids
             tab += '<tfoot>\n' +
@@ -200,17 +184,72 @@ $(document).ready(function(){
                 '    </tfoot>';
             tab += '</table>';
 
-
-
             $("#result").append(tab);
             $("#modal").append(modal);
+
         },
         error: function (data) {
             alert('Error');
         }
+
+
+
     });//end ajax
 
 });
+
+function FunctionMore(numero, string) {
+    $(document)
+        console.log(numero, string);
+
+
+        var urlDataRanks = 'http://localhost:8080/api/ranks';
+        var j = 0;
+        var j2 = 0;
+        var tituloID = "";
+        tituloID = string
+        var modalMore = "";
+        console.log('cardando URL ranks')
+        $.ajax({
+            url: urlDataRanks,
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data, textStatus, xhr) {
+                console.log('Ranks' )
+
+                $.each(data, function (ids, item) {
+                    j2 = j2 +1;
+                    console.log("Ranks data");
+                    var titleRank = data[j].idRecursos;
+                    var ranksValue  = data[j].ValueRank;
+                    console.log("titulo igual"+ data[j].ValueRank)
+                    if (tituloID == titleRank  ){
+                        console.log("titulo igual: "+ data[j].ValueRank);
+                        modalMore +='<p>'+data[j].ValueRank+'</p>';
+                        var modalAppend = "#modal"+titleRank;
+                        $(modalAppend).append(modalMore);
+
+                    }
+                    //var modalAppend = "#modal"+j2;
+                    console.log(modalAppend);
+                    //$("#modal"+j2).append(modalMore);
+                    //console.log(data[i].tituloRecurso);
+
+
+                    j++;
+
+
+                });//end each ids
+
+
+
+            },
+            error: function (data) {
+                alert('Error');
+            }
+        });//end ajax
+};
 
 function configureLoadingScreen(screen){
     $(document)

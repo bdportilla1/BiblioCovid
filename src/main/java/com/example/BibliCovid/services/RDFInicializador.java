@@ -501,7 +501,8 @@ public class RDFInicializador {
                 SimpleLiteral ValueQuartile = (SimpleLiteral) bindingSet.getValue("ValueQuartile");
 
                 HashMap<String, String> doc = new HashMap<String, String>();
-                doc.put("recurso", Recursos.stringValue());
+                String[] parts_recurso = Recursos.stringValue().split("/");
+                doc.put("idRecursos", parts_recurso[parts_recurso.length-1]);
                 doc.put("tituloRecurso", tituloRecurso.stringValue());
                 doc.put("titulo", titulo.stringValue());
                 doc.put("country", country.stringValue());
