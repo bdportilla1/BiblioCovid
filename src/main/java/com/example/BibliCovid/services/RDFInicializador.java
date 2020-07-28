@@ -177,7 +177,7 @@ public class RDFInicializador {
     }
 	
 	
-	public static List<HashMap<String, List<String>>> queryAutores (RepositoryConnection repositoryConnection) {
+	public static List<HashMap<String, String>> queryAutores (RepositoryConnection repositoryConnection) {
 	//public static List<HashMap<String, String>> queryAutores (RepositoryConnection repositoryConnection) {
         TupleQuery tupleQuery = repositoryConnection
                 .prepareTupleQuery(QueryLanguage.SPARQL, query_autores);
@@ -191,8 +191,17 @@ public class RDFInicializador {
         
         List<HashMap<String, List<String>>> autoresHash = new ArrayList<>();
         
+        //HashMap<String, List<String>> docList = new HashMap<>();
+        
+        int contJ = 0;
+        String id_Actual= "";
+        
+        HashMap<String, String> doc = new HashMap<String, String>();
+        
         try {
             result = tupleQuery.evaluate();
+            boolean bandera= true;
+            int num_autor=0;
             while (result.hasNext()) {
                 BindingSet bindingSet = result.next();
 
@@ -200,62 +209,37 @@ public class RDFInicializador {
                 SimpleLiteral titulo = (SimpleLiteral) bindingSet.getValue("titulo");
                 SimpleLiteral autor = (SimpleLiteral) bindingSet.getValue("autor");
                 
-                
-                
-                HashMap<String, String> doc = new HashMap<String, String>();
-                
+                //HashMap<String, String> doc = new HashMap<String, String>();
+                HashMap<String, List<String>> docList = new HashMap<>();
+                HashMap<String, String> limpio = new HashMap<String, String>();
                 String[] parts_recurso = recurso.stringValue().split("/");
-                doc.put("recurso", parts_recurso[parts_recurso.length-1]);
-                doc.put("autor", autor.stringValue());
-                doc.put("titulo", titulo.stringValue());
+                String recursoValue = parts_recurso[parts_recurso.length-1];
                 
-                System.out.println(doc);
-                respuesta.add(doc);
+                if(bandera) {
+                	num_autor= 0;
+                	
+                    doc.put("recurso", recursoValue);
+                    doc.put("titulo", titulo.stringValue());
+                    doc.put(("autor"+num_autor), autor.stringValue());
+                    bandera= false;
+                }
+                if(contJ==0) {
+                	id_Actual = recursoValue;
+                }
                 
-            }
-            String actual_id = respuesta.get(0).get("recurso");
-            
-            HashMap<String, String> autor_Doc = new HashMap<String, String>();
-            
-            
-            HashMap<String, List<String>> docList = new HashMap<>();
-            
-            List<List<String>> lsArrayNombres= new ArrayList<>();
-          
-            int cont = 0;
-            
-            System.out.println(respuesta);
-            for(int i=0; i<respuesta.size(); i++) {
-            	if(actual_id.equals(respuesta.get(i).get("recurso"))) {
-            		autoresArray.add(respuesta.get(i).get("autor"));
-            		
-            	
-            		
-            		//autores.add(respuesta.get(i).get("autor"));
-            		
-            	}else {
-            		
-            		docList.put("autores", autoresArray);
-            		autoresHash.add(docList);
-            		
-            		
-            	
-            		
-            		docList.clear();
-            		autoresArray.clear();
-            		
-            		actual_id = respuesta.get(i).get("recurso");
-            		autoresArray.add(respuesta.get(i).get("autor"));
-            	
-            		
-            	}
-            	if(i== (respuesta.size()-1)) {
-            		
-            		docList.put("autores", autoresArray);
-            		autoresHash.add(docList);
-            	}
-            	
-            	
+                if(contJ>0) {
+                	 if(id_Actual.equals(recursoValue)) {
+                		 System.out.println("jeje");
+                		 num_autor= num_autor+1;
+                		 doc.put(("autor"+num_autor), autor.stringValue());
+                     }else {
+                    	 id_Actual= recursoValue;
+                    	 bandera=true;
+                    	 respuesta.add(doc);
+                    	 doc=limpio;
+                     }
+                }
+                contJ=contJ+1;
             }
             
             
@@ -265,7 +249,7 @@ public class RDFInicializador {
         } finally {
             result.close();
         }
-        return autoresHash;
+        return respuesta;
     }
 	
 	
