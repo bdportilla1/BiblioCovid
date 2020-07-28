@@ -110,21 +110,23 @@ public class RDFInicializador {
 		
 		// Obtener scholary work = tipo. anio, lenguaje, numcitas
 		query_scholary_works
-		="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
-				"				PREFIX dct: <http://purl.org/dc/terms/>\r\n" + 
-				"				PREFIX myData: <http://utpl.edu.ec/COVIDBiblio/ontology/>\r\n" + 
-				"				PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
-				"				PREFIX fabio: <http://purl.org/spar/fabio/>\r\n" + 
-				"				PREFIX prism: <http://prismstandard.org/namespaces/1.2/basic/>\r\n" + 
-				"				select DISTINCT ?recurso ?titulo ?date ?lenguaje ?tipo ?doi ?numCitas where { \r\n" + 
-				"				    ?recurso rdfs:subClassOf fabio:ScholaryWork; \r\n" + 
-				"				        dct:title ?titulo;\r\n" + 
-				"				        dct:date ?date; \r\n" + 
-				"				    	dct:language ?lenguaje;\r\n" + 
-				"				        rdf:type ?tipo;\r\n" + 
-				"            			prism:doi ?doi;\r\n" + 
-				"				    	myData:citationsCount ?numCitas.\r\n" + 
-				"				}  ";
+		="    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
+				"                    PREFIX dct: <http://purl.org/dc/terms/>\r\n" + 
+				"                    PREFIX myData: <http://utpl.edu.ec/COVIDBiblio/ontology/>\r\n" + 
+				"                    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
+				"                    PREFIX fabio: <http://purl.org/spar/fabio/>\r\n" + 
+				"                    PREFIX prism: <http://prismstandard.org/namespaces/1.2/basic/>\r\n" + 
+				"                    select DISTINCT ?recurso ?titulo ?date ?lenguaje ?tipo ?doi ?issn ?volume ?numCitas where { \r\n" + 
+				"                        ?recurso rdfs:subClassOf fabio:ScholaryWork; \r\n" + 
+				"                            dct:title ?titulo;\r\n" + 
+				"                            dct:date ?date; \r\n" + 
+				"                            dct:language ?lenguaje;\r\n" + 
+				"                            rdf:type ?tipo;\r\n" + 
+				"                            prism:doi ?doi;\r\n" + 
+				"                            prism:issn ?issn;\r\n" + 
+				"                            prism:volume ?volume;\r\n" + 
+				"                            myData:citationsCount ?numCitas.\r\n" + 
+				"                    } ";
 		
 		// Obtener todos los scholary works
 		strQuery_Principal
@@ -375,6 +377,8 @@ public class RDFInicializador {
                 SimpleIRI lenguaje = (SimpleIRI) bindingSet.getValue("lenguaje");
                 SimpleIRI tipo = (SimpleIRI) bindingSet.getValue("tipo");
                 SimpleLiteral doi = (SimpleLiteral) bindingSet.getValue("doi");
+                SimpleLiteral issn = (SimpleLiteral) bindingSet.getValue("issn");
+                SimpleLiteral volume = (SimpleLiteral) bindingSet.getValue("volume");
                 SimpleLiteral numCitas = (SimpleLiteral) bindingSet.getValue("numCitas");
                 
 
@@ -394,6 +398,8 @@ public class RDFInicializador {
                 doc.put("tipo", parts_tipo[parts_tipo.length-1]);
                 
                 doc.put("doi", doi.stringValue());
+                doc.put("issn", issn.stringValue());
+                doc.put("volume", volume.stringValue());
                 
                 doc.put("numCitas", numCitas.stringValue());
                 
