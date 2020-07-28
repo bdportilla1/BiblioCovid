@@ -16,32 +16,29 @@
 			<h1 style="text-align: center;">Consultas</h1>
 			
 			<div class="row mt-4 mb-4">
-			
-			
-			
-						<div class="col-sm-6">
-							<label for="tipo">Tipo de documento</label>
-							<div class="form-group">
-								<select class="form-control" id="tipo" name="tipo">
-									<option value="http://purl.org/spar/fabio/Article">Article </option>
-									<option value="http://purl.org/spar/fabio/Review">Review </option>
-									<option value="http://utpl.edu.ec/COVIDBiblio/ontology/Note">Note </option>
-									<option value="http://purl.org/spar/fabio/Letter">Letter </option>
-									<option value="http://purl.org/spar/fabio/Editorial">Editorial </option>
-									<option value="http://purl.org/spar/fabio/ConferencePaper">Conference Paper</option>
-									<option value="http://utpl.edu.ec/COVIDBiblio/ontology/DataPaper">Data Paper </option>
-									<option value="http://utpl.edu.ec/COVIDBiblio/ontology/ShortSurvey">Short Survey </option>
-									<option value="http://purl.org/spar/fabio/Erratum">Erratum </option>
-								  
-								</select>
-							</div>
-						</div>
-					
-					
-					<div class="col-sm-12">
-						<button type="button" class="btn btn-success" onclick="q_1()">Consultar</button>
-						
+
+				<div class="col-sm-6">
+					<label for="tipo">Tipo de documento</label>
+					<div class="form-group">
+						<select class="form-control" id="tipo" name="tipo">
+							<option value="http://purl.org/spar/fabio/Article">Article </option>
+							<option value="http://purl.org/spar/fabio/Review">Review </option>
+							<option value="http://utpl.edu.ec/COVIDBiblio/ontology/Note">Note </option>
+							<option value="http://purl.org/spar/fabio/Letter">Letter </option>
+							<option value="http://purl.org/spar/fabio/Editorial">Editorial </option>
+							<option value="http://purl.org/spar/fabio/ConferencePaper">Conference Paper</option>
+							<option value="http://utpl.edu.ec/COVIDBiblio/ontology/DataPaper">Data Paper </option>
+							<option value="http://utpl.edu.ec/COVIDBiblio/ontology/ShortSurvey">Short Survey </option>
+							<option value="http://purl.org/spar/fabio/Erratum">Erratum </option>
+
+						</select>
 					</div>
+				</div>
+
+				<div class="col-sm-12">
+					<button type="button" class="btn btn-success" onclick="q_1()">Consultar</button>
+
+				</div>
 				
 				<hr>
 				<div class="table-responsive">
@@ -64,5 +61,61 @@
 			
 		</div>
     </div>
+
+	<center><h3>Investigaciones y sus niveles</h3></center>
+	<hr>
+	<div class="container">
+		<div id="gestion_tablas">
+			<h1 style="text-align: center;">Consultas</h1>
+
+			<div class="row mt-4 mb-4">
+
+
+
+				<div class="col-sm-6">
+					<label for="tipo">Tipo de documento</label>
+					<div class="form-group">
+						<select class="form-control" id="tipo" name="tipo">
+							<option value="http://purl.org/spar/fabio/Article">Article </option>
+							<option value="http://purl.org/spar/fabio/Review">Review </option>
+							<option value="http://utpl.edu.ec/COVIDBiblio/ontology/Note">Note </option>
+							<option value="http://purl.org/spar/fabio/Letter">Letter </option>
+							<option value="http://purl.org/spar/fabio/Editorial">Editorial </option>
+							<option value="http://purl.org/spar/fabio/ConferencePaper">Conference Paper</option>
+							<option value="http://utpl.edu.ec/COVIDBiblio/ontology/DataPaper">Data Paper </option>
+							<option value="http://utpl.edu.ec/COVIDBiblio/ontology/ShortSurvey">Short Survey </option>
+							<option value="http://purl.org/spar/fabio/Erratum">Erratum </option>
+
+						</select>
+					</div>
+				</div>
+
+
+				<div class="col-sm-12">
+					<button type="button" class="btn btn-success" onclick="q_1()">Consultar</button>
+
+				</div>
+
+				<hr>
+				<div class="table-responsive">
+					<table class="table my-3">
+						<thead >
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Recurso</th>
+							<th scope="col">Tipo</th>
+							<th scope="col">Titulo</th>
+						</tr>
+						</thead>
+						<tbody id="tabla_publicaciones">
+						</tbody>
+
+					</table>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
   </body>
 </html>
