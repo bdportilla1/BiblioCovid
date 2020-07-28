@@ -221,6 +221,7 @@ public class RDFInicializador {
                     doc.put("recurso", recursoValue);
                     doc.put("titulo", titulo.stringValue());
                     doc.put(("autor"+num_autor), autor.stringValue());
+                    autoresArray.add(autor.stringValue());
                     bandera= false;
                 }
                 if(contJ==0) {
@@ -229,8 +230,9 @@ public class RDFInicializador {
                 
                 if(contJ>0) {
                 	 if(id_Actual.equals(recursoValue)) {
-                		 System.out.println("jeje");
+                		
                 		 num_autor= num_autor+1;
+                		 autoresArray.add(autor.stringValue());
                 		 doc.put(("autor"+num_autor), autor.stringValue());
                      }else {
                     	 id_Actual= recursoValue;
