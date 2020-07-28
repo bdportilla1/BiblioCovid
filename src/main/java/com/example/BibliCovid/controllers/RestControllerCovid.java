@@ -27,6 +27,14 @@ public class RestControllerCovid {
 					RepositoryConnection repositoryConnection = obj.getRepositoryConnection();
 					return RDFInicializador.queryAutores(repositoryConnection);
 				}
+				
+		// Query obtener lenguajes y cantidad de articulos
+		@GetMapping("/conteo")
+		public List<HashMap<String, String>> conteo() throws InterruptedException, ExecutionException{
+			RDFInicializador obj = new RDFInicializador();
+			RepositoryConnection repositoryConnection = obj.getRepositoryConnection();
+			return RDFInicializador.queryConteo(repositoryConnection);
+		}
 	
 	
 	// Query obtener lenguajes y cantidad de articulos

@@ -34,6 +34,8 @@ public class RDFInicializador {
 	
 	private static String query_autores;
 	
+	private static String conteo;
+	
 	
 	
 	private static String strQuery_Principal;
@@ -56,6 +58,32 @@ public class RDFInicializador {
 	}
 	
 	static {
+		conteo = "PREFIX fabio: <http://purl.org/spar/fabio/>\r\n" + 
+				"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
+				"PREFIX dct: <http://purl.org/dc/terms/> \r\n" + 
+				"PREFIX myData: <http://utpl.edu.ec/COVIDBiblio/ontology/>\r\n" + 
+				"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
+				"PREFIX schema: <http://schema.org/>\r\n" + 
+				"select * { \r\n" + 
+				"    {\r\n" + 
+				"        select (count(?Recursos) AS ?count_Recursos)\r\n" + 
+				"        { ?Recursos rdfs:subClassOf fabio:ScholaryWork .}\r\n" + 
+				"    } \r\n" + 
+				"    {\r\n" + 
+				"        select (count(?Autores) AS ?count_Author) \r\n" + 
+				"        { ?Autores a myData:Author .} \r\n" + 
+				"    }\r\n" + 
+				"    {\r\n" + 
+				"        select (count(?language) AS ?count_language) \r\n" + 
+				"        { ?language a schema:Language.} \r\n" + 
+				"    }\r\n" + 
+				"    {\r\n" + 
+				"        select (count(?Citas) AS ?count_Citas) \r\n" + 
+				"        { ?Citas a myData:SourceT.} \r\n" + 
+				"    }\r\n" + 
+				"    \r\n" + 
+				"}";
+		
 		
 		query_autores
 		= "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\r\n" + 
@@ -230,21 +258,60 @@ public class RDFInicializador {
                 
                 if(contJ>0) {
                 	 if(id_Actual.equals(recursoValue)) {
-                		
                 		 num_autor= num_autor+1;
-                		 autoresArray.add(autor.stringValue());
+                		 
                 		 doc.put(("autor"+num_autor), autor.stringValue());
+                		 autoresArray.add(autor.stringValue());
                      }else {
                     	 id_Actual= recursoValue;
                     	 bandera=true;
                     	 respuesta.add(doc);
                     	 doc=limpio;
+                    	 
+                    	
                      }
                 }
                 contJ=contJ+1;
             }
             
             
+        } catch (QueryEvaluationException qee) {
+            logger.error(WTF_MARKER,
+                    qee.getStackTrace().toString(), qee);
+        } finally {
+            result.close();
+        }
+        return respuesta;
+    }
+	public static List<HashMap<String, String>> queryConteo (RepositoryConnection repositoryConnection) {
+        TupleQuery tupleQuery = repositoryConnection
+                .prepareTupleQuery(QueryLanguage.SPARQL, conteo);
+        TupleQueryResult result = null;
+        
+        List<HashMap<String, String>> respuesta = new ArrayList<>();
+        try {
+            result = tupleQuery.evaluate();
+            while (result.hasNext()) {
+                BindingSet bindingSet = result.next();
+
+                
+                SimpleLiteral count_Recursos = (SimpleLiteral) bindingSet.getValue("count_Recursos");
+                SimpleLiteral count_Author = (SimpleLiteral) bindingSet.getValue("count_Author");
+                SimpleLiteral count_language = (SimpleLiteral) bindingSet.getValue("count_language");
+                SimpleLiteral count_Citas = (SimpleLiteral) bindingSet.getValue("count_Citas");
+                
+                HashMap<String, String> doc = new HashMap<String, String>();
+                
+             
+                
+                doc.put("count_Recursos", count_Recursos.stringValue());
+                doc.put("count_Author", count_Author.stringValue());
+                doc.put("count_language", count_language.stringValue());
+                doc.put("count_Citas", count_Citas.stringValue());
+                
+                respuesta.add(doc);
+                 
+            }
         } catch (QueryEvaluationException qee) {
             logger.error(WTF_MARKER,
                     qee.getStackTrace().toString(), qee);
