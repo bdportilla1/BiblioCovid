@@ -7,32 +7,98 @@
 <head th:replace="init :: _head"/>
 <body>
 <style>
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    }
+	body {
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	}
 
-    #chartdiv {
+	#chartdiv {
+		width: 100%;
+		height: 500px;
+	}
+    #chartdiv2 {
         width: 100%;
         height: 500px;
-        margin-bottom: 5%;
     }
+
 </style>
 
+<!-- CSS only -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-<script src="https://www.amcharts.com/lib/4/core.js"></script>
-<script src="https://www.amcharts.com/lib/4/charts.js"></script>
-<script src="https://www.amcharts.com/lib/4/plugins/wordCloud.js"></script>
-<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+<!-- JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+
+
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 <link rel="stylesheet" href="css/LoadingScreen.css">
+
+<!--script maps-->
+<script src="js/chart/chartGraficas.js"></script>
 
 <header th:replace="init :: _header" > </header>
 
-<!--script maps-->
-<script src="js/script_graficas.js"></script>
+<center>
+    <h3>Filtros de tipos de documentos</h3>
+    <p><i>Seleccione los parametros de búsqueda</i></p>
+    <div class="form-group col-lg-3">
+        <label for="Select1">Seleccione:</label>
+        <select class="form-control" id="Select1">
+            <option>Seleccione...</option>
+            <option value="1">Tipo de documento</option>
+            <option value="2">Source title</option>
+            <option value="3">País</option>
+            <option value="4">Idiomas</option>
+        </select>
+        <br>
+        <button type="button" class="btn btn-primary" id="morebutton" onclick="cambiatType()">Buscar</button>
+    </div>
+</center>
+<div id="grafica1" style="display: none">
+    <center><h3>Total de tipos de documentos</h3></center>
+    <hr class="col-md-6">
+    <center>
+        <div style="width: 80%">
+            <div id="chartdiv"></div>
+        </div>
+    </center>
+</div>
 
- <div class="container">
- 
+<div id="grafica2" style="display: none">
+    <center><h3>Source title</h3></center>
+    <hr class="col-md-6">
+    <center>
+        <div style="width: 80%">
+            <div id="result"  class="highlight"></div>
+        </div>
+    </center>
+</div>
 
+<div id="grafica3" style="display: none">
+    <center><h3>País </h3></center>
+    <hr class="col-md-6">
+    <div id="chartdiv"></div>
+</div>
+
+<div id="grafica4" style="display: none">
+
+    <center><h3>Total de Idioma</h3></center>
+    <hr class="col-md-6">
+    <center>
+        <div style="width: 80%">
+            <div id="chartdiv2"></div>
+        </div>
+    </center>
+</div>
+
+
+<hr class="col-md-6">
+
+<!-- <div class="container">
  <div class="row mt-4 mb-4">
  	
  	
@@ -58,10 +124,33 @@
 
 <div id="chartdiv"></div>
 
-</div>
+</div>-->
 
 <div id="loading-screen" style="display:none">
     <img src="img/spinning-circles.svg">
 </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
 </body>
 </html>
