@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 
 public class RDFInicializador {
 	
@@ -37,6 +38,8 @@ public class RDFInicializador {
 	private static String conteo;
 	
 	private static String query_conteo_source;
+	
+	private static String query_conteo_source_country;
 	
 	
 	
@@ -121,6 +124,21 @@ public class RDFInicializador {
 				"             bido:withBibliometricData ?Source.\r\n" + 
 				"    ?Source dct:title ?source\r\n" + 
 				"} GROUP BY ?source";
+		
+		query_conteo_source_country
+		="PREFIX fabio: <http://purl.org/spar/fabio/>\r\n" + 
+				"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
+				"PREFIX dct: <http://purl.org/dc/terms/> \r\n" + 
+				"PREFIX myData: <http://utpl.edu.ec/COVIDBiblio/ontology/>\r\n" + 
+				"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
+				"PREFIX bido: <http://purl.org/spar/bido/>\r\n" + 
+				"PREFIX dbo: <http://dbpedia.org/ontology/>\r\n" + 
+				"select DISTINCT ?country (count(*) AS ?cantidad) WHERE {\r\n" + 
+				"    ?Recurso rdfs:subClassOf fabio:ScholaryWork;\r\n" + 
+				"             bido:withBibliometricData ?Source.\r\n" + 
+				"    ?Source dct:title ?source;\r\n" + 
+				"            dbo:country ?country. \r\n" + 
+				"} GROUP BY ?country";
 		
 		
 		// Obtener scholary work = tipo. anio, lenguaje, numcitas
@@ -327,6 +345,41 @@ public class RDFInicializador {
                 doc.put("count_Author", count_Author.stringValue());
                 doc.put("count_language", count_language.stringValue());
                 doc.put("count_Citas", count_Citas.stringValue());
+                
+                respuesta.add(doc);
+                 
+            }
+        } catch (QueryEvaluationException qee) {
+            logger.error(WTF_MARKER,
+                    qee.getStackTrace().toString(), qee);
+        } finally {
+            result.close();
+        }
+        return respuesta;
+    }
+	
+	
+	public static List<HashMap<String, String>> queryConteoSourceCountry (RepositoryConnection repositoryConnection) {
+        TupleQuery tupleQuery = repositoryConnection
+                .prepareTupleQuery(QueryLanguage.SPARQL, query_conteo_source_country);
+        TupleQueryResult result = null;
+        
+        List<HashMap<String, String>> respuesta = new ArrayList<>();
+        try {
+            result = tupleQuery.evaluate();
+            while (result.hasNext()) {
+                BindingSet bindingSet = result.next();
+
+                SimpleIRI country = (SimpleIRI) bindingSet.getValue("country");
+                SimpleLiteral cantidad = (SimpleLiteral) bindingSet.getValue("cantidad");
+                
+                HashMap<String, String> doc = new HashMap<String, String>();
+                
+                
+                String[] parts_country = country.stringValue().split("/");
+                doc.put("country", parts_country[parts_country.length-1]);
+                doc.put("cantidad", cantidad.stringValue());
+                
                 
                 respuesta.add(doc);
                  
