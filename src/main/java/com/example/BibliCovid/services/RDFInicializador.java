@@ -36,6 +36,8 @@ public class RDFInicializador {
 	
 	private static String conteo;
 	
+	private static String query_conteo_source;
+	
 	
 	
 	private static String strQuery_Principal;
@@ -106,6 +108,19 @@ public class RDFInicializador {
 				"    ?Recursos rdfs:subClassOf fabio:ScholaryWork;\r\n" + 
 				"              dct:language ?lenguaje.\r\n" + 
 				"} GROUP BY ?lenguaje";
+		
+		query_conteo_source
+		= "PREFIX fabio: <http://purl.org/spar/fabio/>\r\n" + 
+				"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r\n" + 
+				"PREFIX dct: <http://purl.org/dc/terms/> \r\n" + 
+				"PREFIX myData: <http://utpl.edu.ec/COVIDBiblio/ontology/>\r\n" + 
+				"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
+				"PREFIX bido: <http://purl.org/spar/bido/>\r\n" + 
+				"select DISTINCT ?source (count(*) AS ?cantidad) WHERE {\r\n" + 
+				"    ?Recurso rdfs:subClassOf fabio:ScholaryWork;\r\n" + 
+				"             bido:withBibliometricData ?Source.\r\n" + 
+				"    ?Source dct:title ?source\r\n" + 
+				"} GROUP BY ?source";
 		
 		
 		// Obtener scholary work = tipo. anio, lenguaje, numcitas
@@ -325,6 +340,38 @@ public class RDFInicializador {
         return respuesta;
     }
 	
+	
+	public static List<HashMap<String, String>> queryConteoSource (RepositoryConnection repositoryConnection) {
+        TupleQuery tupleQuery = repositoryConnection
+                .prepareTupleQuery(QueryLanguage.SPARQL, query_conteo_source);
+        TupleQueryResult result = null;
+        
+        List<HashMap<String, String>> respuesta = new ArrayList<>();
+        try {
+            result = tupleQuery.evaluate();
+            while (result.hasNext()) {
+                BindingSet bindingSet = result.next();
+
+                SimpleLiteral source = (SimpleLiteral) bindingSet.getValue("source");
+                SimpleLiteral cantidad = (SimpleLiteral) bindingSet.getValue("cantidad");
+                
+                HashMap<String, String> doc = new HashMap<String, String>();
+                
+                doc.put("source", source.stringValue());
+                doc.put("cantidad", cantidad.stringValue());
+                
+                
+                respuesta.add(doc);
+                 
+            }
+        } catch (QueryEvaluationException qee) {
+            logger.error(WTF_MARKER,
+                    qee.getStackTrace().toString(), qee);
+        } finally {
+            result.close();
+        }
+        return respuesta;
+    }
 	
 	public static List<HashMap<String, String>> queryLenguajes (RepositoryConnection repositoryConnection) {
         TupleQuery tupleQuery = repositoryConnection
