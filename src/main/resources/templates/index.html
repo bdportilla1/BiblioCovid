@@ -5,12 +5,78 @@
   <meta charset="utf-8">
 </head>
 <head th:replace="init :: _head"/>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <body>
   <header th:replace="init :: _header" > </header>
+  <section class="jumbotron text-center" >
+    <center>
+      <div class="col-md-10 text-center">
+        <h3 style="text-align: left">Acerca de:</h3>
+        <hr class="col-sm-12 text-left">
+        <p class="lead text-justify">
+          Se busca desarrollar una aplicación que permita visualizar e interactuar con información de datos RDF generados a partir de un conjunto de dataset recolectada en relación a las investigaciones sobre COVID-19 o SARS-COV-2 <a href="https://github.com/bdportilla1/BiblioCovid" target="_blank">link</a>.
+        </p>
+        <br>
 
-  <div class="container">
-    <img src="img/covid.jpg" alt="inicio covid">
+        <h3 style="text-align: left">Autores</h3>
+        <hr class="col-sm-12 text-left">
+        <div class="container">
+          <center>
+            <div class="card-deck col-lg-10">
+              <div class="card" style="height: 80%">
+                <center>
+                  <img class="card-img-center" src="img/diego.jpg" alt="Diego Pinto" style="height: 100%; width: 60%">
+                </center>
+                <div class="card-body">
+                  <h5 class="card-title">Diego Pinto</h5>
+                  <h6><i>Autor 1</i></h6>
+                  <p class="card-text">
+                    Estudiante de Informática y Sistemas de Información
+                    <br><br>
+                  </p>
+                </div>
+                <div class="card-footer">
+                  <div class="text-muted"> <i class="fab fa-github"></i> <i class="fab fa-twitter-square"></i></div>
+                </div>
+              </div>
+              <div class="card ">
+                <center>
+                  <img class="card-img-center" src="img/perro2.png" alt="Bryant Portilla" style="height: 100%; width: 60%">
+                </center>
+                <div class="card-body">
+                  <h5 class="card-title">Bryant Portilla</h5>
+                  <h6><i>Autor 2</i></h6>
+                  <p class="card-text">
+                    Estudiante de Informática y Sistemas de Información
+                  </p>
+                </div>
+                <div class="card-footer">
+                  <div class="text-muted"><i class="fab fa-twitter-square"></i></div>
+                </div>
+              </div>
+            </div>
+          </center>
+        </div>
 
-  </div>
+        <br><br><br>
+        <!--            <h3 style="text-align: left">Resources taken from the source for the development of the Titling Work.</h3>-->
+        <h3 style="text-align: left">Bibliografía</h3>
+        <p class="lead text-justify">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item text-justify">Candela, G., Escobar, P., Carrasco, R. C., & Marco-Such, M. (2019). A linked open data framework to enhance the discoverability and impact of culture heritage. Journal of Information Science, 45(6), 756–766. https://doi.org/10.1177/0165551518812658</li>
+          <li class="list-group-item text-justify">Hazaël-Massieux, D., & Berners-Lee, T. (2003). The Semantic Web and its applications at W3C. https://www.w3.org/2003/Talks/simo-semwebapp/all.htm</li>
+          <li class="list-group-item text-justify">Ontotext. (2020). GraphDB Documentation. http://graphdb.ontotext.com/documentation/standard/</li>
+          <li class="list-group-item text-justify">Pfenninger, S., DeCarolis, J., Hirth, L., Quoilin, S., & Staffell, I. (2017). The importance of open data and software: Is energy research lagging behind? Energy Policy, 101, 211–215. https://doi.org/10.1016/j.enpol.2016.11.046</li>
+          <li class="list-group-item text-justify">Sharma, V. (2015). What are WEB 2.0 & WEB 3.0? https://www.quora.com/What-are- WEB-2-0-WEB-3-0</li>
+          <li class="list-group-item text-justify">Lapuente, M. J., & Lamarca, C. (2018). RDF.</li>
+        </ul>
+
+        </p>
+        <hr class="col-sm-12 text-left">
+
+      </div>
+      <br>
+  </section>
 </body>
 </html>

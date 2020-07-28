@@ -307,11 +307,16 @@ function grafica2() {
 }
 
 function grafica3() {
+    // Themes begin
     am4core.useTheme(am4themes_animated);
-    // Themes end
-    // Create chart
-    var chart = am4core.create("chartdiv", am4charts.PieChart);
+// Themes end
+
+    var chart = am4core.create("chartdiv3", am4charts.RadarChart);
     chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+    var label = chart.createChild(am4core.Label);
+    label.text = "Drag slider to change radius";
+    label.exportable = false;
 
     var screen = $('#loading-screen');
     configureLoadingScreen(screen);
@@ -323,7 +328,7 @@ function grafica3() {
     var text = "";
     var chart2 = "";
 
-    var urlData = 'http://localhost:8080/api/q2';
+    var urlData = 'http://localhost:8080/api/sourceConteoCountry';
     var i = 0;
     console.log('cardando URL')
     $.ajax({
@@ -332,24 +337,14 @@ function grafica3() {
         dataType: 'json',
         data: {},
         success: function (data, textStatus, xhr) {
-            console.log('SDG' )
-            console.log(data)
-            var descriptionData = '';
-            var title = '';
-            var div = "";
-            var div2 = "";
-            var codeODS = '';
-            $.each(data, function (ids, item) {
 
+            $.each(data, function (ids, item) {
                 console.log("data");
-                text2 = text2 + data[i].tipo ;
-                var languaje = "";
-                languaje1 = data[i].tipo;
 
                 // para la lista de los datos chart
                 datosT.push({
-                    "country": data[i].tipo,
-                    "value": data[i].cantidad
+                    "category": data[i].country,
+                    "value1": data[i].cantidad
                 });
 
 
@@ -361,25 +356,47 @@ function grafica3() {
 
             chart.data = datosT;
 
-            chart.radius = am4core.percent(70);
-            chart.innerRadius = am4core.percent(40);
-            chart.startAngle = 180;
-            chart.endAngle = 360;
+            chart.radius = am4core.percent(95);
+            chart.startAngle = 270 - 180;
+            chart.endAngle = 270 + 180;
+            chart.innerRadius = am4core.percent(60);
 
-            var series = chart.series.push(new am4charts.PieSeries());
-            series.dataFields.value = "value";
-            series.dataFields.category = "country";
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "category";
+            categoryAxis.renderer.labels.template.location = 0.5;
+            categoryAxis.renderer.grid.template.strokeOpacity = 0.1;
+            categoryAxis.renderer.axisFills.template.disabled = true;
+            categoryAxis.mouseEnabled = false;
 
-            series.slices.template.cornerRadius = 10;
-            series.slices.template.innerCornerRadius = 7;
-            series.slices.template.draggable = true;
-            series.slices.template.inert = true;
-            series.alignLabels = false;
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.tooltip.disabled = true;
+            valueAxis.renderer.grid.template.strokeOpacity = 0.05;
+            valueAxis.renderer.axisFills.template.disabled = true;
+            valueAxis.renderer.axisAngle = 260;
+            valueAxis.renderer.labels.template.horizontalCenter = "right";
+            valueAxis.min = 0;
 
-            series.hiddenState.properties.startAngle = 90;
-            series.hiddenState.properties.endAngle = 90;
+            var series1 = chart.series.push(new am4charts.RadarColumnSeries());
+            series1.columns.template.radarColumn.strokeOpacity = 1;
+            series1.name = "Cantidad";
+            series1.dataFields.categoryX = "category";
+            series1.columns.template.tooltipText = "{name}: {valueY.value}";
+            series1.dataFields.valueY = "value1";
+            series1.stacked = true;
 
-            chart.legend = new am4charts.Legend();
+            chart.seriesContainer.zIndex = -1;
+
+            var slider = chart.createChild(am4core.Slider);
+            slider.start = 0.5;
+            slider.exportable = false;
+            slider.events.on("rangechanged", function() {
+                var start = slider.start;
+
+                chart.startAngle = 270 - start * 179 - 1;
+                chart.endAngle = 270 + start * 179 + 1;
+
+                valueAxis.renderer.axisAngle = chart.startAngle;
+            });
 
 
         },
